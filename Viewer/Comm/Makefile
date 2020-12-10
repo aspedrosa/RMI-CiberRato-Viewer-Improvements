@@ -18,7 +18,7 @@ all: $(OBJS)
 crqcontrolpanel-moc.cpp:	crqcontrolpanel.h
 		$(MOC) crqcontrolpanel.h > crqcontrolpanel-moc.cpp
 
-crqcomm-moc.cpp:	crqcomm.h
+crqcomm-moc.cpp:	crqsimulatorcomm.h
 		$(MOC) crqcomm.h > crqcomm-moc.cpp
 		
 clean:

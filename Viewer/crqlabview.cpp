@@ -3,7 +3,7 @@
 
 #include <QtGui>
 
-#include"Comm/crqcomm.h"
+#include"Comm/crqsimulatorcomm.h"
 #include "logotipo.xpm"
 
 CRQLabView::CRQLabView(CRMainParameters *p, QWidget *parent) :
@@ -34,8 +34,8 @@ CRQLabView::CRQLabView(CRMainParameters *p, QWidget *parent) :
 
     // Communications object
     QString host( param->serverAddr );
-    comm = new CRQComm(this, scene, lab, host, param->port,
-                       param->control, param->autoConnect, param->autoStart);
+    comm = new CRQSimulatorComm(this, scene, lab, host, param->port,
+                                param->control, param->autoConnect, param->autoStart);
 
     ui->graphicsView_lab->setBackgroundBrush( QColor( 128, 128, 128 ));
     ui->graphicsView_lab->setScene(scene);

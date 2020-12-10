@@ -29,10 +29,10 @@
 
 #include"crqscene.h"
 #include"crmainparameters.h"
-#include"Comm/crqcomm.h"
+#include"Comm/crqsimulatorcomm.h"
 #include"Lab/crlab.h"
 
-class CRQComm;
+class CRQSimulatorComm;
 
 namespace Ui {
 class CRQLabView;
@@ -77,7 +77,7 @@ private:
     CRQScene *scene;
     /*! \var comm Pointer to the communication object.
      */
-    CRQComm *comm;
+    CRQSimulatorComm *comm;
 
     QString skinFileName;
 

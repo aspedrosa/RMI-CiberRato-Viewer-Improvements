@@ -37,7 +37,7 @@
 #include <QString>
 #include <qxml.h>
 #include <QObject>
-#include "crqcomm.h"
+#include "crqsimulatorcomm.h"
 #include "crqcommhandler.h"
 #include "crqreplyhandler.h"
 
@@ -45,16 +45,16 @@
 
 using namespace std;
 
-CRQComm::CRQComm()
+CRQSimulatorComm::CRQSimulatorComm()
 {
 
 }
 
 /*============================================================================*/
 
-CRQComm::CRQComm(CRQLabView *lb, CRQScene *commScene, CRLab *commLab,
-  QString h, unsigned short port_, const char c , const char autoC,
-  const char autoS)
+CRQSimulatorComm::CRQSimulatorComm(CRQLabView *lb, CRQScene *commScene, CRLab *commLab,
+                                   QString h, unsigned short port_, const char c , const char autoC,
+                                   const char autoS)
     : QUdpSocket(), timer(this)
 {
     scoreLayout = lb->findChild<QVBoxLayout *>("scoreLayout");
@@ -111,13 +111,13 @@ CRQComm::CRQComm(CRQLabView *lb, CRQScene *commScene, CRLab *commLab,
 
 /*============================================================================*/
 
-void CRQComm::connect(void)
+void CRQSimulatorComm::connect(void)
 {
     if (isConnected)
         return;
 
 #ifdef DEBUG
-    cout << "CRQComm::connect\n";
+    cout << "CRQSimulatorComm::connect\n";
 #endif
 
     //Registration <VIEW/>
@@ -135,10 +135,10 @@ void CRQComm::connect(void)
 
 /*============================================================================*/
 
-void CRQComm::replyControler()
+void CRQSimulatorComm::replyControler()
 {
 #ifdef DEBUG
-    cout << "CRQComm::replyControler\n";
+    cout << "CRQSimulatorComm::replyControler\n";
 #endif
 
     //char data[16384];
@@ -203,10 +203,10 @@ void CRQComm::replyControler()
 
 /*============================================================================*/
 
-void CRQComm::SendRequests()
+void CRQSimulatorComm::SendRequests()
 {
 #ifdef DEBUG
-    cout << "CRQComm::sendRequests\n";
+    cout << "CRQSimulatorComm::sendRequests\n";
 #endif
 
     //cerr << "Send requests \n";
@@ -230,14 +230,14 @@ void CRQComm::SendRequests()
 
 /*============================================================================*/
 
-CRQComm::~CRQComm()
+CRQSimulatorComm::~CRQSimulatorComm()
 {
 
 }
 
 /*============================================================================*/
 
-void CRQComm::dataControler() //Called when the socket receive something
+void CRQSimulatorComm::dataControler() //Called when the socket receive something
 {
     //char data[16384];
 
@@ -267,7 +267,7 @@ void CRQComm::dataControler() //Called when the socket receive something
                 case CRQCommHandler::LAB:
                 {
 #ifdef DEBUG
-                    cout << "CRQComm::dataControler -- Lab\n";
+                    cout << "CRQSimulatorComm::dataControler -- Lab\n";
 #endif
 
                     if (lab != NULL )   // With this we can replace the last
@@ -338,7 +338,7 @@ void CRQComm::dataControler() //Called when the socket receive something
 }
 
 //=============================================================================
-void CRQComm::sendMessage( const char *mensagem )
+void CRQSimulatorComm::sendMessage(const char *mensagem )
 {
     if( writeDatagram( mensagem, strlen(mensagem) + 1, serverAddress, port ) == -1 )
     {
@@ -348,10 +348,10 @@ void CRQComm::sendMessage( const char *mensagem )
 }
 
 //=============================================================================
-void CRQComm::closeWindows(void)
+void CRQSimulatorComm::closeWindows(void)
 {
 #ifdef DEBUG
-    cout << "CRQComm::closeWindows\n";
+    cout << "CRQSimulatorComm::closeWindows\n";
 #endif
 
     if (dataView != NULL)
@@ -367,7 +367,7 @@ void CRQComm::closeWindows(void)
 }
 
 //=============================================================================
-void CRQComm::skin(QString skinFileName)
+void CRQSimulatorComm::skin(QString skinFileName)
 {
     skinFName = skinFileName;
 }

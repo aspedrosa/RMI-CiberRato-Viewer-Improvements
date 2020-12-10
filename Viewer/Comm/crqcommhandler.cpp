@@ -49,7 +49,7 @@ bool CRQCommHandler::startElement( const QString&, const QString&,
 {
     const QString &tag = qName;
 	switch (type) 	//Type defined in .h as enum.
-	{
+	{ // <Lab><Wall></Wall></Lab>
         case UNKNOWN:
         {
 			// process begin tag 

@@ -28,7 +28,7 @@
 #include "crmainparameters.h"
 #include "crqparamhandler.h"
 #include "./Lab/crlab.h"
-#include "./Comm/crqcomm.h"
+#include "./Comm/crqsimulatorcomm.h"
 
 using namespace std;
 

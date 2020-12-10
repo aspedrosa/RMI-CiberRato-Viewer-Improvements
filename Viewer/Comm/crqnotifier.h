@@ -28,7 +28,7 @@
  */
 
 #include <qsocketnotifier.h>
-#include "crqcomm.h"
+#include "crqsimulatorcomm.h"
 
 class CRQNotifier : public QSocketNotifier
 {

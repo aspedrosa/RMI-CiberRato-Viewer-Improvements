@@ -20,7 +20,7 @@
 
 #ifndef _CIBER_RATO_CRQCOMM_
 #define _CIBER_RATO_CRQCOMM_
-/*! \class CRQComm
+/*! \class CRQSimulatorComm
  * 	\brief Implementation of the comunication class.
  *
  * 	This class is responsible for all conections in the viewer.
@@ -46,7 +46,7 @@
 
 class CRQLabView;
 
-class CRQComm : public QUdpSocket
+class CRQSimulatorComm : public QUdpSocket
 {
 Q_OBJECT
 public:
@@ -56,16 +56,16 @@ public:
 	 *	\param host the address of simulator.
 	 *	\param port the port of simulator.
 	 */
-    CRQComm(CRQLabView *lb, CRQScene *commScene, CRLab *commLab,
-	  QString host, unsigned short port, const char c, const char autoC,
-	  const char autoS);
+    CRQSimulatorComm(CRQLabView *lb, CRQScene *commScene, CRLab *commLab,
+                     QString host, unsigned short port, const char c, const char autoC,
+                     const char autoS);
 	/*! This is the destructor.
 	 */
-	~CRQComm();
+	~CRQSimulatorComm();
 
 	/*! One constructor without parameters.
 	 */
-	CRQComm( );
+	CRQSimulatorComm( );
 
 	 /*! This function will send information to simulator. It will be used by
 	 *  the control panel.
@@ -108,7 +108,7 @@ public slots:
 	 */
     void SendRequests(void);
 private:
-    char control; // Aparecimento ou não da janela de controlo (not supported / no need)
+    char control; // Aparecimento ou nï¿½o da janela de controlo (not supported / no need)
 	char autoConnect;
     char autoStart;
 	CRRobot *robot;
