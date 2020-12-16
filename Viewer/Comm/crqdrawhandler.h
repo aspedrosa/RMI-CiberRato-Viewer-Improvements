@@ -53,14 +53,14 @@ public:
      */
     Type objectType();
 
-    vector<Shape>& get_shapes() {
+    vector<Shape*>& get_shapes() {
         return this->shapes;
     }
 
 private:
 
     Type type;
-    vector<Shape> shapes;
+    vector<Shape*> shapes;
     QColor *color;
     QVector<QPointF> *polygon_points;
 };

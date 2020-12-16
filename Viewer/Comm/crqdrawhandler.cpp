@@ -52,12 +52,14 @@ bool CRQDrawHandler::startElement( const QString&, const QString&,
                 const QString y = attr.value(QString("y"));
                 if (!diam_vertical.isNull() && !diam_horizontal.isNull() && !x.isNull() && !y.isNull()) {
                     auto *p = new Point(x.toDouble(), y.toDouble());
-                    shapes.push_back(Ellipse(*color, *p, diam_vertical.toDouble(), diam_horizontal.toDouble()));
+                    auto *ellipse = new Ellipse(*color, *p, diam_vertical.toDouble(), diam_horizontal.toDouble());
+                    shapes.push_back(ellipse);
                 }
             } else if (tag == "Text") {
                 QString text = attr.value(QString("text"));
                 if (!text.isNull()) {
-                    shapes.push_back(Quote(*color, text));
+                    auto *quote = new Quote(*color, text);
+                    shapes.push_back(quote);
                 }
             } else if (tag == "Circle") {
                 const QString diam = attr.value(QString("Diam"));
@@ -65,7 +67,8 @@ bool CRQDrawHandler::startElement( const QString&, const QString&,
                 const QString y = attr.value(QString("y"));
                 if (!diam.isNull() && !x.isNull() && !y.isNull()) {
                     auto *p = new Point(x.toDouble(), y.toDouble());
-                    shapes.push_back(Circle(*color, *p, diam.toDouble()));
+                    auto *circle = new Circle(*color, *p, diam.toDouble());
+                    shapes.push_back(circle);
                 }
             } else if (tag == "Rectangle") {
                 const QString width = attr.value(QString("Width"));
@@ -74,15 +77,18 @@ bool CRQDrawHandler::startElement( const QString&, const QString&,
                 const QString y = attr.value(QString("y"));
                 if (!width.isNull() && !height.isNull() && !x.isNull() && !y.isNull()) {
                     auto *p = new Point(x.toDouble(), y.toDouble());
-                    shapes.push_back(Rectangle(*color, *p, width.toDouble(), height.toDouble()));
+                    auto *rectangle = new Rectangle(*color, *p, width.toDouble(), height.toDouble());
+                    shapes.push_back(rectangle);
                 }
-            } else if (tag == "Square") {
+            } else if (tag == "Square") { {
                 const QString width = attr.value(QString("Width"));
                 const QString x = attr.value(QString("x"));
                 const QString y = attr.value(QString("y"));
                 if (!width.isNull() && !x.isNull() && !y.isNull()) {
                     auto *p = new Point(x.toDouble(), y.toDouble());
-                    shapes.push_back(Square(*color, *p, width.toDouble()));
+                    auto *square = new Square(*color, *p, width.toDouble());
+                    shapes.push_back(square);
+                }
                 }
             } else if (tag == "Polygon") {
                 type = POINT;
@@ -95,7 +101,8 @@ bool CRQDrawHandler::startElement( const QString&, const QString&,
                 if (!x0.isNull() && !y0.isNull() && !x1.isNull() && !y1.isNull()) {
                     auto *p0 = new Point(x0.toDouble(), y0.toDouble());
                     auto *p1 = new Point(x1.toDouble(), y1.toDouble());
-                    shapes.push_back(Line(*color, *p0, *p1));
+                    auto *line = new Line(*color, *p0, *p1);
+                    shapes.push_back(line);
                 }
             } }
             break;
@@ -130,7 +137,8 @@ QString& qName)
             break;
         case POINT:
             if(tag == "Polygon") {
-                shapes.push_back(Polygon(*color, *polygon_points));
+                auto *polygon = new Polygon(*color, *polygon_points);
+                shapes.push_back(polygon);
             }
             break;
     }

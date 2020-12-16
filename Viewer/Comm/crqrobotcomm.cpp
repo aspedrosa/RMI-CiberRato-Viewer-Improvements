@@ -73,7 +73,7 @@ CRQRobotComm::CRQRobotComm(CRQScene *commScene, QString h, unsigned short port_ 
     QHostAddress localAddress;			//Local Address
     localAddress.setAddress( QString( "127.0.0.1" ));
 
-    if( bind( localAddress, 0 ) == FALSE )	//Bind for local address
+    if( bind( localAddress, 5000 ) == FALSE )	//Bind for local address
     {
         cerr << "Failed to assign address" << endl;
         exit (-1);
@@ -83,7 +83,7 @@ CRQRobotComm::CRQRobotComm(CRQScene *commScene, QString h, unsigned short port_ 
         this->connect();
 
     // Connect Alarm event
-    QObject::connect(&timer, SIGNAL(timeout()), SLOT(SendRequests()));
+    //QObject::connect(&timer, SIGNAL(timeout()), SLOT(SendRequests()));
 }
 
 /*============================================================================*/
@@ -213,10 +213,12 @@ void CRQRobotComm::dataControler() //Called when the socket receive something
 
             switch (objectReceived) {
                 case CRQDrawHandler::SHAPES:
-                    for (auto &shape: drawHandler.get_shapes()) {
+                    for (auto *shape: drawHandler.get_shapes()) {
                         QGraphicsItem *item;
+                        auto *circle = (Ellipse*) shape;
+                        item = new QGraphicsEllipseItem(circle->get_p().get_x(), circle->get_p().get_y(), circle->get_diam_vertical(), circle->get_diam_vertical(), 0, scene);
                         if (typeid(shape) == typeid(Ellipse)) {
-                            auto *circle = (Ellipse*) &shape;
+                            auto *circle = (Ellipse*) shape;
                             item = new QGraphicsEllipseItem(circle->get_p().get_x(), circle->get_p().get_y(), circle->get_diam_vertical(), circle->get_diam_vertical(), 0, scene);
                         } if (typeid(shape) == typeid(Rectangle)) {
                             auto *rectangle = (Rectangle*) &shape;
@@ -233,13 +235,15 @@ void CRQRobotComm::dataControler() //Called when the socket receive something
                             item = new QGraphicsPolygonItem(polygon->get_points(), 0, scene);
                         }
 
+                        auto *graphics_shape = (QAbstractGraphicsShapeItem*) item;
+                        graphics_shape->setBrush( QBrush( shape->get_color()));
                         if (typeid(item) == typeid(QAbstractGraphicsShapeItem)) {
                             auto *graphics_shape = (QAbstractGraphicsShapeItem*) item;
-                            graphics_shape->setBrush( QBrush( shape.get_color()));
+                            graphics_shape->setBrush( QBrush( shape->get_color()));
                         }
                         else if (typeid(item) == typeid(QGraphicsLineItem)){
                             auto *line_item = (QGraphicsLineItem*) item;
-                            line_item->setPen(QPen(shape.get_color()));
+                            line_item->setPen(QPen(shape->get_color()));
                         }
                         item->setVisible( true );
                         item->setZValue(7);

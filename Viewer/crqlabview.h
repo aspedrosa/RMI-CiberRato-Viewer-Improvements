@@ -34,6 +34,7 @@
 #include"Lab/crlab.h"
 
 class CRQSimulatorComm;
+class CRQRobotComm;
 
 namespace Ui {
 class CRQLabView;

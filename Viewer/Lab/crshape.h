@@ -38,7 +38,7 @@ public:
     Shape(QColor &color) {
         this->color = color;
     }
-    ~Shape() {
+    virtual ~Shape() {
         delete &color;
     }
 
