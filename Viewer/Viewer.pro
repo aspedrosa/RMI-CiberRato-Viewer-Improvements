@@ -17,6 +17,9 @@ HEADERS += \
     crqparamhandler.h \
     Comm/crqsimulatorcomm.h \
     Comm/crqrobotcomm.h \
+    Comm/crqcommhandler.h \
+    Comm/crqdrawhandler.h \
+    Lab/crshape.h \
     crqrobotinfo.h \
     crqlabview.h \
     crqdataview.h
@@ -31,9 +34,11 @@ SOURCES += \
     Lab/crtarget.cpp \
     Lab/crvertice.cpp \
     Lab/crwall.cpp \
+    Lab/crshape.cpp \
     Comm/crqsimulatorcomm.cpp \
     Comm/crqrobotcomm.cpp \
     Comm/crqcommhandler.cpp \
+    Comm/crqdrawhandler.cpp \
     Comm/crqreplyhandler.cpp \
     crqrobotinfo.cpp \
     crqlabview.cpp \

@@ -9,6 +9,7 @@
  *  robot, one lab or one grid.
  */
 
+#include <vector>
 #include <qxml.h>
 #include "../Lab/crrobot.h"
 #include "../Lab/crgrid.h"
@@ -17,6 +18,7 @@
 #include "../Lab/crtarget.h"
 #include "../Lab/crvertice.h"
 #include "../Lab/crbeacon.h"
+#include "../Lab/crshape.h"
 
 class QString;
 class QXmlLocator;
@@ -27,7 +29,7 @@ public:
     /*! \enum Type
      *  This enum type represent the object received.
      */
-    enum Type {UNKNOWN, SHAPES, INTERNAL_KNOWLEDGE};  // TODO check LIST, PATH
+    enum Type {UNKNOWN, SHAPES, POINT, INTERNAL_KNOWLEDGE};  // TODO check LIST, PATH
     /*! This function will be called in the begining of the XML document.
      */
     bool startDocument();
@@ -54,6 +56,9 @@ public:
 private:
 
     Type type;
+    vector<Shape> shapes;
+    QColor *color;
+    QVector<QPointF> *polygon_points;
 };
 
 #endif //VIEWER_CRQDRAWHANDLER_H
