@@ -34,14 +34,15 @@ CRQLabView::CRQLabView(CRMainParameters *p, QWidget *parent) :
 
     // Communications object
     QString host( param->serverAddr );
-    comm = new CRQSimulatorComm(this, scene, lab, host, param->port,
+    simulator_comm = new CRQSimulatorComm(this, scene, lab, host, param->port,
                                 param->control, param->autoConnect, param->autoStart);
+    robot_comm = new CRQRobotComm(scene, host, 5000, param->autoConnect, param->autoStart);
 
     ui->graphicsView_lab->setBackgroundBrush( QColor( 128, 128, 128 ));
     ui->graphicsView_lab->setScene(scene);
     ui->graphicsView_lab->fitInView(scene->sceneRect());
 
-    connect (comm, SIGNAL(viewerConnected(bool)), ui->actionConnect, SLOT(setChecked(bool)));
+    connect (simulator_comm, SIGNAL(viewerConnected(bool)), ui->actionConnect, SLOT(setChecked(bool)));
 
 }
 
@@ -76,7 +77,7 @@ void CRQLabView::on_actionReset_Viewer_triggered()
                 nTimesReseted++);
 #endif
 
-        comm->closeWindows(); // close dataView and control windows
+        simulator_comm->closeWindows(); // close dataView and control windows
         scene->clear();
         scene->skin(skinFileName);
         scene->bgInitDraw();
@@ -99,7 +100,7 @@ void CRQLabView::on_actionConnect_toggled(bool connected)
         ui->actionConnect->setText("&Disconnect");
         ui->actionConnect->setToolTip("Disconnect");
         ui->actionConnect->setShortcut(Qt::CTRL+Qt::Key_D);
-        comm->connect();
+        simulator_comm->connect();
     }
     else
     {
@@ -191,6 +192,6 @@ void CRQLabView::paintEvent(QPaintEvent *)
 
 void CRQLabView::on_actionStart_triggered()
 {
-    comm->sendMessage("<Start/>");
+    simulator_comm->sendMessage("<Start/>");
 
 }

@@ -82,7 +82,6 @@ private:
     CRQScene *scene;			//Scene
     QHostAddress serverAddress; //Server Address
     unsigned short port;
-    CRQCommHandler::Type objectReceived;
     QString host;
     QTimer timer;
     bool isConnected;

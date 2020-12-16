@@ -30,6 +30,7 @@
 #include"crqscene.h"
 #include"crmainparameters.h"
 #include"Comm/crqsimulatorcomm.h"
+#include"Comm/crqrobotcomm.h"
 #include"Lab/crlab.h"
 
 class CRQSimulatorComm;
@@ -77,7 +78,9 @@ private:
     CRQScene *scene;
     /*! \var comm Pointer to the communication object.
      */
-    CRQSimulatorComm *comm;
+    CRQSimulatorComm *simulator_comm;
+
+    CRQRobotComm *robot_comm;
 
     QString skinFileName;
 

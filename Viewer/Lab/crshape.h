@@ -12,8 +12,23 @@
 
 class Point {
 public:
-    Point();
-    Point(double x, double y);
+    Point() {
+        this->x = this->y = 0;
+    }
+
+    Point(double x, double y) {
+        this->x = x;
+        this->y = y;
+    }
+
+    double get_x() const {
+        return x;
+    }
+
+    double get_y() const {
+        return y;
+    }
+
 private:
     double x, y;
 };
@@ -26,18 +41,28 @@ public:
     ~Shape() {
         delete &color;
     }
+
+    const QColor &get_color() const {
+        return color;
+    }
+
 private:
     QColor color;
 };
 
-class Text : public Shape {
+class Quote : public Shape {
 public:
-    Text(QColor &color, QString &text) : Shape(color){
+    Quote(QColor &color, QString &text) : Shape(color){
         this->text;
     }
-    ~Text() {
+    ~Quote() {
         delete &text;
     }
+
+    const QString &get_text() const {
+        return text;
+    }
+
 private:
     QString text;
 };
@@ -51,6 +76,15 @@ public:
     ~Line(){
         delete &p_begin, &p_end;
     }
+
+    const Point &get_p_begin() const {
+        return p_begin;
+    }
+
+    const Point &get_p_end() const {
+        return p_end;
+    }
+
 private:
     Point p_begin, p_end;
 };
@@ -65,6 +99,19 @@ public:
     ~Ellipse() {
         delete &p;
     }
+
+    const Point &get_p() const {
+        return p;
+    }
+
+    double get_diam_vertical() const {
+        return diam_vertical;
+    }
+
+    double get_diam_horizontal() const {
+        return diam_horizontal;
+    }
+
 private:
     Point p;
     double diam_vertical, diam_horizontal;
@@ -84,6 +131,11 @@ public:
     ~Polygon(){
         delete &points;
     }
+
+    const QVector<QPointF> &get_points() const {
+        return points;
+    }
+
 private:
     QVector<QPointF> points;
 };
@@ -98,6 +150,19 @@ public:
     ~Rectangle(){
         delete &p;
     }
+
+    const Point &get_p() const {
+        return p;
+    }
+
+    double get_width() const {
+        return width;
+    }
+
+    double get_height() const {
+        return height;
+    }
+
 private:
     Point p;
     double width;

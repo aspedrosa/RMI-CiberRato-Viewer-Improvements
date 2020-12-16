@@ -17,12 +17,13 @@
 
 #endif
 
+#include <typeinfo>
 #include <iostream>
 #include <QString>
 #include <qxml.h>
 #include <QObject>
 #include "crqrobotcomm.h"
-#include "crqcommhandler.h"
+#include "crqdrawhandler.h"
 #include "crqreplyhandler.h"
 
 #include <QtGui>
@@ -202,18 +203,51 @@ void CRQRobotComm::dataControler() //Called when the socket receive something
         QXmlInputSource source;
         source.setData( QString( datagram.data() ) );
         // set commHandler for LAB, GRID and ROBOT
-        CRQCommHandler commHandler;
+        CRQDrawHandler drawHandler;
 
         // parse received message with commHandler
         QXmlSimpleReader reader;
-        reader.setContentHandler(&commHandler);
-        if(reader.parse(source))
-        {
-            objectReceived = commHandler.objectType(); //Object type received
+        reader.setContentHandler(&drawHandler);
+        if(reader.parse(source)) {
+            CRQDrawHandler::Type objectReceived = drawHandler.objectType(); //Object type received
 
-            switch (objectReceived)
-            {
-                // TODO
+            switch (objectReceived) {
+                case CRQDrawHandler::SHAPES:
+                    for (auto &shape: drawHandler.get_shapes()) {
+                        QGraphicsItem *item;
+                        if (typeid(shape) == typeid(Ellipse)) {
+                            auto *circle = (Ellipse*) &shape;
+                            item = new QGraphicsEllipseItem(circle->get_p().get_x(), circle->get_p().get_y(), circle->get_diam_vertical(), circle->get_diam_vertical(), 0, scene);
+                        } if (typeid(shape) == typeid(Rectangle)) {
+                            auto *rectangle = (Rectangle*) &shape;
+                            item = new QGraphicsRectItem(rectangle->get_p().get_x(), rectangle->get_p().get_y(), rectangle->get_width(), rectangle->get_height(), 0, scene);
+                        } else if (typeid(shape) == typeid(Line)) {
+                            auto *line = (Line*) &shape;
+                            QGraphicsLineItem a;
+                            item = new QGraphicsLineItem(line->get_p_begin().get_x(), line->get_p_begin().get_y(), line->get_p_end().get_x(), line->get_p_end().get_y(), 0, scene);
+                        } else if (typeid(shape) == typeid(Quote)) {
+                            auto *text = (Quote*) &shape;
+                            item = new QGraphicsTextItem(text->get_text(), 0, scene);
+                        } else if (typeid(shape) == typeid(Polygon)) {
+                            auto *polygon = (Polygon*) &shape;
+                            item = new QGraphicsPolygonItem(polygon->get_points(), 0, scene);
+                        }
+
+                        if (typeid(item) == typeid(QAbstractGraphicsShapeItem)) {
+                            auto *graphics_shape = (QAbstractGraphicsShapeItem*) item;
+                            graphics_shape->setBrush( QBrush( shape.get_color()));
+                        }
+                        else if (typeid(item) == typeid(QGraphicsLineItem)){
+                            auto *line_item = (QGraphicsLineItem*) item;
+                            line_item->setPen(QPen(shape.get_color()));
+                        }
+                        item->setVisible( true );
+                        item->setZValue(7);
+                        item->setOpacity(0.5);
+                    }
+                    break;
+                case CRQDrawHandler::INTERNAL_KNOWLEDGE:
+                    break;
             } // End of switch (selecciona o objecto recebido)
 
         } // End of if (caso o parser tenha funcionado)

@@ -53,6 +53,10 @@ public:
      */
     Type objectType();
 
+    vector<Shape>& get_shapes() {
+        return this->shapes;
+    }
+
 private:
 
     Type type;

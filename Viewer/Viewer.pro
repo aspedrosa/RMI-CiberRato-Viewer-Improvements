@@ -34,7 +34,6 @@ SOURCES += \
     Lab/crtarget.cpp \
     Lab/crvertice.cpp \
     Lab/crwall.cpp \
-    Lab/crshape.cpp \
     Comm/crqsimulatorcomm.cpp \
     Comm/crqrobotcomm.cpp \
     Comm/crqcommhandler.cpp \

@@ -57,7 +57,7 @@ bool CRQDrawHandler::startElement( const QString&, const QString&,
             } else if (tag == "Text") {
                 QString text = attr.value(QString("text"));
                 if (!text.isNull()) {
-                    shapes.push_back(Text(*color, text));
+                    shapes.push_back(Quote(*color, text));
                 }
             } else if (tag == "Circle") {
                 const QString diam = attr.value(QString("Diam"));
