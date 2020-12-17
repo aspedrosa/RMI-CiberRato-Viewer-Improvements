@@ -35,12 +35,13 @@ def main():
             print("Invalid type")
             continue
 
-        message = [f"<Shapes><{shapes[type]}> "]
+        message = [f"<Shapes><{shapes[type]} "]
         for attr in mandatory_fields[type]:
             value = input(attr + ": ")
             message.append(f'{attr}="{value}" ')
 
         if type == "p":
+            message.append(f">")
             i = 0
             while True:
                 x = input(f"x{i} (Q)uit:").lower()
@@ -51,9 +52,14 @@ def main():
                     break
 
                 message.append(f'<Point x="{x}" y="{y}"></Point>')
+                i += 1
+        else:
+            message.append(f">")
 
-        message.append("</Shapes>")
 
+        message.append(f"</{shapes[type]}></Shapes>")
+
+        print("".join(message))
         sock.sendto(bytes("".join(message), "utf-8"), ("127.0.0.1", 5000))
 
 
