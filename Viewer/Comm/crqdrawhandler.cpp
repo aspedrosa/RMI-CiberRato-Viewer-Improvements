@@ -139,6 +139,7 @@ QString& qName)
             if(tag == "Polygon") {
                 auto *polygon = new Polygon(*color, *polygon_points);
                 shapes.push_back(polygon);
+                type = SHAPES;
             }
             break;
     }

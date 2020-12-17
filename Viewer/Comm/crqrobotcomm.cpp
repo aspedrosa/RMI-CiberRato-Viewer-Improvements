@@ -81,6 +81,7 @@ void CRQRobotComm::dataControler() //Called when the socket receive something
                 case CRQDrawHandler::SHAPES:
                     for (auto *shape: drawHandler.get_shapes()) {
                         QGraphicsItem *item;
+                        std::cerr << dynamic_cast<Polygon*>(shape);
                         if (dynamic_cast<Ellipse*>(shape)) {
                             auto *circle = (Ellipse*) shape;
                             item = new QGraphicsEllipseItem(circle->get_p().get_x(), circle->get_p().get_y(), circle->get_diam_horizontal(), circle->get_diam_vertical(), 0, scene);
