@@ -72,7 +72,7 @@ bool CRQDrawHandler::startElement( const QString&, const QString&,
                 }
             } else if (tag == "Rectangle") {
                 const QString width = attr.value(QString("Width"));
-                const QString height = attr.value(QString("Width"));
+                const QString height = attr.value(QString("Height"));
                 const QString x = attr.value(QString("x"));
                 const QString y = attr.value(QString("y"));
                 if (!width.isNull() && !height.isNull() && !x.isNull() && !y.isNull()) {

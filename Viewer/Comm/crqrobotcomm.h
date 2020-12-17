@@ -41,50 +41,22 @@ public:
      *	\param host the address of simulator.
      *	\param port the port of simulator.
      */
-    CRQRobotComm(CRQScene *commScene, QString host, unsigned short port, const char autoC, const char autoS);
+    CRQRobotComm(CRQScene *commScene, unsigned short port);
     /*! This is the destructor.
      */
     ~CRQRobotComm();
 
     /*! One constructor without parameters.
      */
-    CRQRobotComm( );
-
-    /*! This function will send information to simulator. It will be used by
-    *  the control panel.
-    * \param msg the message to send.
-    */
-    void sendMessage( const char * msg );
-
-    /*! Send the registration message to simulator and and wait for response.
-     * If OK, the aplication continue. Also connect the signal of notifier
-     * to slot replyControler.
-     * \sa replyControler
-     */
-    void connect(void);
+    CRQRobotComm();
 
 public slots:
     /*! Function called by the notifier to process the received information.
      */
     void dataControler();
 
-    /*! Function called by notifier to process the received information.
-     * If the reply is OK, this function connect the signal of notifier
-     * to the slot dataControler.
-     * \sa dataControler
-     */
-    void replyControler();
-
 private:
-    char autoConnect;
-    char autoStart;
-    CRReply *reply;
     CRQScene *scene;			//Scene
-    QHostAddress serverAddress; //Server Address
-    unsigned short port;
-    QString host;
-    QTimer timer;
-    bool isConnected;
 
 };
 
