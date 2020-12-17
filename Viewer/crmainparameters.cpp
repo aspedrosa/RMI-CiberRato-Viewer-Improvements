@@ -30,6 +30,8 @@ CRMainParameters::CRMainParameters()
 	autoConnect = 'n';
 	control = 'y';
 	autoStart = 'n';
+    agent_port = 5000;
+	agent_viewer = 'y';
 }
 
 CRMainParameters::~CRMainParameters()

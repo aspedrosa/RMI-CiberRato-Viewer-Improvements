@@ -60,6 +60,12 @@ int main( int argc, char **argv )
 			 param->serverAddr = svrName;
              i+=2;
         }
+        else if(strcmp(Visualizador.argv()[i], "--agent_port") == 0 ){
+            if(Visualizador.argc()<i+1 || Visualizador.argv()[i+1][0]=='-')
+                ParameterError( Visualizador.argv()[i+1] );
+            sscanf( (Visualizador.argv()[i+1]), "%hd", &(param->agent_port));
+            i+=1;
+        }
         else if( strcmp(Visualizador.argv()[i], "--lowercolor") == 0 )
         {
             if(Visualizador.argc()<i+2 || Visualizador.argv()[i+1][0]=='-')
@@ -88,6 +94,10 @@ int main( int argc, char **argv )
         {
 			i+=1;
             param->autoConnect = 'y';
+        }
+        else if( strcmp(Visualizador.argv()[i], "--noagent") == 0 ){
+            i+=1;
+            param->agent_viewer = 'n';
         }
         else if( strcmp(Visualizador.argv()[i], "--paramfile") == 0 )
         {
@@ -155,4 +165,3 @@ int main( int argc, char **argv )
 	return Visualizador.exec();
 
 }
-

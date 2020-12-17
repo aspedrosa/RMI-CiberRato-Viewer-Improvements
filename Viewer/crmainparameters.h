@@ -70,6 +70,13 @@ public:
 	char autoConnect;
 
 	char control;
+
+	/* Server port to receive messages from agents */
+    unsigned short agent_port;
+
+    /* Listen to agent messages */
+    char agent_viewer;
+
 };
 #endif
 

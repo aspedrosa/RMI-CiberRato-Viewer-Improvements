@@ -81,33 +81,34 @@ void CRQRobotComm::dataControler() //Called when the socket receive something
                 case CRQDrawHandler::SHAPES:
                     for (auto *shape: drawHandler.get_shapes()) {
                         QGraphicsItem *item;
-                        auto *circle = (Ellipse*) shape;
-                        item = new QGraphicsEllipseItem(circle->get_p().get_x(), circle->get_p().get_y(), circle->get_diam_vertical(), circle->get_diam_vertical(), 0, scene);
-                        if (typeid(shape) == typeid(Ellipse)) {
+                        if (dynamic_cast<Ellipse*>(shape)) {
                             auto *circle = (Ellipse*) shape;
-                            item = new QGraphicsEllipseItem(circle->get_p().get_x(), circle->get_p().get_y(), circle->get_diam_vertical(), circle->get_diam_vertical(), 0, scene);
-                        } if (typeid(shape) == typeid(Rectangle)) {
-                            auto *rectangle = (Rectangle*) &shape;
+                            item = new QGraphicsEllipseItem(circle->get_p().get_x(), circle->get_p().get_y(), circle->get_diam_horizontal(), circle->get_diam_vertical(), 0, scene);
+                        } else if (dynamic_cast<Rectangle*>(shape)) {
+                            auto *rectangle = (Rectangle*) shape;
                             item = new QGraphicsRectItem(rectangle->get_p().get_x(), rectangle->get_p().get_y(), rectangle->get_width(), rectangle->get_height(), 0, scene);
-                        } else if (typeid(shape) == typeid(Line)) {
-                            auto *line = (Line*) &shape;
+                        } else if (dynamic_cast<Line*>(shape)) {
+                            auto *line = (Line*) shape;
                             QGraphicsLineItem a;
                             item = new QGraphicsLineItem(line->get_p_begin().get_x(), line->get_p_begin().get_y(), line->get_p_end().get_x(), line->get_p_end().get_y(), 0, scene);
-                        } else if (typeid(shape) == typeid(Quote)) {
-                            auto *text = (Quote*) &shape;
+                        } else if (dynamic_cast<Quote*>(shape)) {
+                            auto *text = (Quote*) shape;
                             item = new QGraphicsTextItem(text->get_text(), 0, scene);
-                        } else if (typeid(shape) == typeid(Polygon)) {
-                            auto *polygon = (Polygon*) &shape;
+                        } else if (dynamic_cast<Polygon*>(shape)){
+                            auto *polygon = (Polygon*) shape;
+                            for(auto &point: polygon->get_points()){
+                                std::cerr << point.x();
+                                std::cerr << point.y();
+                                std::cerr << endl;
+                            }
                             item = new QGraphicsPolygonItem(polygon->get_points(), 0, scene);
                         }
 
-                        auto *graphics_shape = (QAbstractGraphicsShapeItem*) item;
-                        graphics_shape->setBrush( QBrush( shape->get_color()));
-                        if (typeid(item) == typeid(QAbstractGraphicsShapeItem)) {
+                        if (dynamic_cast<QAbstractGraphicsShapeItem*>(item)) {
                             auto *graphics_shape = (QAbstractGraphicsShapeItem*) item;
                             graphics_shape->setBrush( QBrush( shape->get_color()));
                         }
-                        else if (typeid(item) == typeid(QGraphicsLineItem)){
+                        else if (dynamic_cast<QGraphicsLineItem*>(item)){
                             auto *line_item = (QGraphicsLineItem*) item;
                             line_item->setPen(QPen(shape->get_color()));
                         }
