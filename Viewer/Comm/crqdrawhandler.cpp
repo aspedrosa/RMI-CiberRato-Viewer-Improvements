@@ -44,7 +44,17 @@ bool CRQDrawHandler::startElement( const QString&, const QString&,
             } else {
                 color = new QColor(red_color.toInt(), green_color.toInt(), blue_color.toInt());
             }
+
             shape_id = attr.value(QString("id")).toInt();
+
+            QString ttl_string = attr.value(QString("ttl"));
+            if (ttl_string.isNull()) {
+                ttl = DEFAULT_SHAPE_TTL;
+            }
+            else {
+                ttl = ttl_string.toUInt();
+            }
+
             if (tag == "Ellipse") {
                 const QString diam_vertical = attr.value(QString("Diam_vertical"));
                 const QString diam_horizontal = attr.value(QString("Diam_horizontal"));
@@ -52,13 +62,13 @@ bool CRQDrawHandler::startElement( const QString&, const QString&,
                 const QString y = attr.value(QString("y"));
                 if (!diam_vertical.isNull() && !diam_horizontal.isNull() && !x.isNull() && !y.isNull()) {
                     auto *p = new Point(x.toDouble(), y.toDouble());
-                    auto *ellipse = new Ellipse(*color, shape_id, *p, diam_vertical.toDouble(), diam_horizontal.toDouble());
+                    auto *ellipse = new Ellipse(*color, shape_id, *p, diam_vertical.toDouble(), diam_horizontal.toDouble(), ttl);
                     shapes.push_back(ellipse);
                 }
             } else if (tag == "Text") {
                 QString text = attr.value(QString("text"));
                 if (!text.isNull()) {
-                    auto *quote = new Quote(*color, shape_id, text);
+                    auto *quote = new Quote(*color, shape_id, text, ttl);
                     shapes.push_back(quote);
                 }
             } else if (tag == "Circle") {
@@ -67,7 +77,7 @@ bool CRQDrawHandler::startElement( const QString&, const QString&,
                 const QString y = attr.value(QString("y"));
                 if (!diam.isNull() && !x.isNull() && !y.isNull()) {
                     auto *p = new Point(x.toDouble(), y.toDouble());
-                    auto *circle = new Circle(*color, shape_id, *p, diam.toDouble());
+                    auto *circle = new Circle(*color, shape_id, *p, diam.toDouble(), ttl);
                     shapes.push_back(circle);
                 }
             } else if (tag == "Rectangle") {
@@ -77,7 +87,7 @@ bool CRQDrawHandler::startElement( const QString&, const QString&,
                 const QString y = attr.value(QString("y"));
                 if (!width.isNull() && !height.isNull() && !x.isNull() && !y.isNull()) {
                     auto *p = new Point(x.toDouble(), y.toDouble());
-                    auto *rectangle = new Rectangle(*color, shape_id, *p, width.toDouble(), height.toDouble());
+                    auto *rectangle = new Rectangle(*color, shape_id, *p, width.toDouble(), height.toDouble(), ttl);
                     shapes.push_back(rectangle);
                 }
             } else if (tag == "Square") { {
@@ -86,7 +96,7 @@ bool CRQDrawHandler::startElement( const QString&, const QString&,
                 const QString y = attr.value(QString("y"));
                 if (!width.isNull() && !x.isNull() && !y.isNull()) {
                     auto *p = new Point(x.toDouble(), y.toDouble());
-                    auto *square = new Square(*color, shape_id, *p, width.toDouble());
+                    auto *square = new Square(*color, shape_id, *p, width.toDouble(), ttl);
                     shapes.push_back(square);
                 }
                 }
@@ -101,7 +111,7 @@ bool CRQDrawHandler::startElement( const QString&, const QString&,
                 if (!x0.isNull() && !y0.isNull() && !x1.isNull() && !y1.isNull()) {
                     auto *p0 = new Point(x0.toDouble(), y0.toDouble());
                     auto *p1 = new Point(x1.toDouble(), y1.toDouble());
-                    auto *line = new Line(*color, shape_id, *p0, *p1);
+                    auto *line = new Line(*color, shape_id, *p0, *p1, ttl);
                     shapes.push_back(line);
                 }
             } }
@@ -137,7 +147,7 @@ QString& qName)
             break;
         case POINT:
             if(tag == "Polygon") {
-                auto *polygon = new Polygon(*color, shape_id, *polygon_points);
+                auto *polygon = new Polygon(*color, shape_id, *polygon_points, ttl);
                 shapes.push_back(polygon);
                 type = SHAPES;
             }

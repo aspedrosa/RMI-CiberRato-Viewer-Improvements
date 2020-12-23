@@ -15,6 +15,8 @@
 
 #include <typeinfo>
 #include <iostream>
+#include <chrono>
+#include <thread>
 #include <QString>
 #include <qxml.h>
 #include <QObject>
@@ -26,6 +28,27 @@
 #include <unistd.h>
 
 using namespace std;
+
+[[noreturn]] void ttl_checker(std::map<time_t, shape_info> *ttd, std::unordered_map<int, QGraphicsItem*> *ShapesDrawn, QGraphicsScene *scene) {
+    while (1) {
+        time_t now = time(0);
+        auto first = ttd->begin();
+        if (now > first->first) {
+            int id = first->second.id;
+            QGraphicsItem* item = first->second.item;
+            if (ShapesDrawn->count(id) > 0 && ShapesDrawn->at(id) == item) {  // TODO find()
+                scene->removeItem(item);
+                ShapesDrawn->erase(id);
+            }
+            ttd->erase(first->first);
+        }
+
+        this_thread::sleep_until(
+                chrono::system_clock::now() + chrono::milliseconds(1)
+        );
+    }
+}
+
 
 CRQRobotComm::CRQRobotComm()
 {
@@ -46,6 +69,8 @@ CRQRobotComm::CRQRobotComm(CRQScene *commScene, unsigned short port): QUdpSocket
         cerr << "Failed to assign address" << endl;
         exit (-1);
     }
+
+    new std::thread(ttl_checker, &ttd, &ShapesDrawn, scene);
 }
 
 /*============================================================================*/
@@ -54,6 +79,22 @@ CRQRobotComm::~CRQRobotComm()
 {
 
 }
+
+/*
+void delete_item(CRQScene *scene, std::unordered_map<int, QGraphicsItem*> *ShapesDrawn, unsigned int ttl, int id, QGraphicsItem *item) {
+    cerr << "going to zzzzzzzz" << endl;
+
+    this_thread::sleep_until(
+        chrono::system_clock::now() + chrono::milliseconds(ttl)
+    );
+
+    cerr << "going to delete" << endl;
+
+    if(ShapesDrawn->find(id)->second == item){
+        scene->removeItem(item);
+    }
+}
+ */
 
 /*============================================================================*/
 
@@ -122,6 +163,7 @@ void CRQRobotComm::dataControler() //Called when the socket receive something
                             scene->removeItem(ShapesDrawn[shape->getId()]);
                         }
                         ShapesDrawn[shape->getId()] = item;
+                        ttd[time(0) + shape->getTTL()] = {item, shape->getId()};
                     }
                     break;
                 case CRQDrawHandler::INTERNAL_KNOWLEDGE:

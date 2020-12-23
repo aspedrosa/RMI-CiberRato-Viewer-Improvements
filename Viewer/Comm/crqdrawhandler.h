@@ -20,6 +20,8 @@
 #include "../Lab/crbeacon.h"
 #include "../Lab/crshape.h"
 
+#define DEFAULT_SHAPE_TTL 5000;
+
 class QString;
 class QXmlLocator;
 
@@ -63,6 +65,7 @@ private:
     vector<Shape*> shapes;
     QColor *color;
     int shape_id;
+    unsigned int ttl;
     QVector<QPointF> *polygon_points;
 };
 

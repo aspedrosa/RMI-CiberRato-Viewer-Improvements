@@ -109,10 +109,12 @@ int main( int argc, char **argv )
         else if( strcmp(Visualizador.argv()[i], "--help") == 0)
         {
 			cout << "viewer-1.1.0       " << "[--host simulatorAddress:port]\n";
+            cout << "                   [--agent_port port]\n";
 			cout << "                   [--lowercolor color]\n";
 			cout << "                   [--highercolor color]\n";
 			cout << "                   [--paramfile file.xml]\n";
 			cout << "                   [--nocontrol]\n";
+            cout << "                   [--noagent]\n";
 			cout << "                   [--autoconnect]\n";
 			cout << "                   [--autostart]\n";
 			cout << "                   [--help]\n";

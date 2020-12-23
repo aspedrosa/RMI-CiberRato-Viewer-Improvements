@@ -15,6 +15,9 @@
  * 	are called,	according to the type of information received.
  */
 
+#include <map>
+#include <unordered_map>
+#include <chrono>
 #include <QUdpSocket>
 #include <QHostAddress>
 #include <QTimer>
@@ -29,9 +32,13 @@
 
 #include <QtGui>
 
-#include <map>
 
 class CRQLabView;
+
+typedef struct {
+    QGraphicsItem* item;
+    int id;
+} shape_info;
 
 class CRQRobotComm : public QUdpSocket
 {
@@ -59,7 +66,9 @@ public slots:
 
 private:
     CRQScene *scene;			//Scene
-    std::map<int, QGraphicsItem*> ShapesDrawn;
+    std::map<time_t, shape_info> ttd;
+    std::unordered_map<int, QGraphicsItem*> ShapesDrawn;
+    // TODO concurrent maps
 };
 
 #endif //VIEWER_CRQAGENTCOMM_H
