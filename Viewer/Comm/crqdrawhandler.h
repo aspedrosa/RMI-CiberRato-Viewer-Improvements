@@ -62,6 +62,7 @@ private:
     Type type;
     vector<Shape*> shapes;
     QColor *color;
+    int shape_id;
     QVector<QPointF> *polygon_points;
 };
 

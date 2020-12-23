@@ -29,6 +29,8 @@
 
 #include <QtGui>
 
+#include <map>
+
 class CRQLabView;
 
 class CRQRobotComm : public QUdpSocket
@@ -57,7 +59,7 @@ public slots:
 
 private:
     CRQScene *scene;			//Scene
-
+    std::map<int, QGraphicsItem*> ShapesDrawn;
 };
 
 #endif //VIEWER_CRQAGENTCOMM_H

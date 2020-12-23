@@ -3,7 +3,7 @@
 import socket
 
 mandatory_fields = {
-    "e": ["red", "green", "blue", "x", "y", "Diam_horizontal", "Diam_vertical"],
+    "e": ["red", "green", "blue", "x", "y", "Diam_horizontal", "Diam_vertical", "id"],
     "c": ["red", "green", "blue", "x", "y", "Diam"],
     "r": ["red", "green", "blue", "x", "y", "Width", "Height"],
     "s": ["red", "green", "blue", "x", "y", "Width"],
@@ -18,7 +18,7 @@ shapes = {
     "r": "Rectangle",
     "s": "Square",
     "l": "Line",
-    "q": "Quote",
+    "q": "Text",
     "p": "Polygon",
 }
 

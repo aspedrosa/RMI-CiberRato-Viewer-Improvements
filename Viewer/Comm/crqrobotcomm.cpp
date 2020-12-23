@@ -23,6 +23,8 @@
 
 #include <QtGui>
 
+#include <unistd.h>
+
 using namespace std;
 
 CRQRobotComm::CRQRobotComm()
@@ -114,8 +116,12 @@ void CRQRobotComm::dataControler() //Called when the socket receive something
                             line_item->setPen(QPen(shape->get_color()));
                         }
                         item->setVisible( true );
-                        item->setZValue(7);
-                        item->setOpacity(0.5);
+                        item->setZValue(8);
+                        item->setOpacity(1);
+                        if(ShapesDrawn.count(shape->getId())==1){
+                            scene->removeItem(ShapesDrawn[shape->getId()]);
+                        }
+                        ShapesDrawn[shape->getId()] = item;
                     }
                     break;
                 case CRQDrawHandler::INTERNAL_KNOWLEDGE:

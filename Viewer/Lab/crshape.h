@@ -35,8 +35,9 @@ private:
 
 class Shape {
 public:
-    Shape(QColor &color) {
+    Shape(QColor &color, int id) {
         this->color = color;
+        this->id = id;
     }
     virtual ~Shape() {
         delete &color;
@@ -46,13 +47,18 @@ public:
         return color;
     }
 
+    int getId(){
+        return id;
+    }
+
 private:
     QColor color;
+    int id;
 };
 
 class Quote : public Shape {
 public:
-    Quote(QColor &color, QString &text) : Shape(color){
+    Quote(QColor &color, int id, QString &text) : Shape(color, id){
         this->text;
     }
     ~Quote() {
@@ -69,7 +75,7 @@ private:
 
 class Line : public Shape {
 public:
-    Line(QColor &color, Point &p_begin, Point &p_end) : Shape (color) {
+    Line(QColor &color, int id, Point &p_begin, Point &p_end) : Shape (color, id) {
         this->p_begin = p_begin;
         this->p_end = p_end;
     }
@@ -91,7 +97,7 @@ private:
 
 class Ellipse : public Shape {
 public:
-    Ellipse(QColor &color, Point &p, double diam_vertical, double diam_horizontal) : Shape(color) {
+    Ellipse(QColor &color, int id, Point &p, double diam_vertical, double diam_horizontal) : Shape(color, id) {
         this->p = p;
         this->diam_vertical = diam_vertical;
         this->diam_horizontal = diam_horizontal;
@@ -119,12 +125,12 @@ private:
 
 class Circle : public Ellipse {
 public:
-    Circle(QColor &color, Point &p, double diam) : Ellipse(color, p, diam, diam) {}
+    Circle(QColor &color, int id, Point &p, double diam) : Ellipse(color, id, p, diam, diam) {}
 };
 
 class Polygon : public Shape {
 public:
-    Polygon(QColor &color, QVector<QPointF> &points) : Shape(color){
+    Polygon(QColor &color, int id, QVector<QPointF> &points) : Shape(color, id){
         this->points = points;
 
     }
@@ -142,7 +148,7 @@ private:
 
 class Rectangle : public Shape {
 public:
-    Rectangle(QColor &color, Point &p, double width, double height) : Shape(color){
+    Rectangle(QColor &color, int id, Point &p, double width, double height) : Shape(color, id){
         this-> p = p;
         this->width = width;
         this-> height = height;
@@ -171,7 +177,7 @@ private:
 
 class Square : public Rectangle {
 public:
-    Square(QColor &color, Point &p, double width) : Rectangle(color, p, width, width){}
+    Square(QColor &color, int id, Point &p, double width) : Rectangle(color, id, p, width, width){}
 };
 
 #endif //VIEWER_CRSHAPE_H
