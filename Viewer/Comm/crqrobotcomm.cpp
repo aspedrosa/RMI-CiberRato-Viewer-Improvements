@@ -31,15 +31,24 @@ using namespace std;
 
 long getCurrentTime(){
     auto now = std::chrono::system_clock::now();
-    auto now_ms = std::chrono::time_point_cast<std::chrono::milliseconds>(now);
+    auto now_ms = std::chrono::time_point_cast<std::chrono::microseconds>(now);
     auto epoch = now_ms.time_since_epoch();
-    auto value = std::chrono::duration_cast<std::chrono::milliseconds>(epoch);
+    auto value = std::chrono::duration_cast<std::chrono::microseconds>(epoch);
     long duration = value.count();
     return duration;
 }
 
-[[noreturn]] void ttl_checker(std::map<long, shape_info> *ttd, std::unordered_map<int, QGraphicsItem*> *ShapesDrawn, QGraphicsScene *scene) {
+[[noreturn]] void ttl_checker(
+        std::map<long, shape_info> *ttd,
+        std::unordered_map<int, QGraphicsItem*> *ShapesDrawn,
+        QGraphicsScene *scene,
+        std::mutex *m,
+        std::condition_variable *shapes_ttl
+        ) {
+
+    std::unique_lock<std::mutex> lock(*m);
     while (1) {
+        cerr << "working" << endl;
         long now = getCurrentTime();
         auto first = ttd->begin();
         if (now > first->first) {
@@ -52,9 +61,15 @@ long getCurrentTime(){
             ttd->erase(first->first);
         }
 
-        this_thread::sleep_until(
-                chrono::system_clock::now() + chrono::milliseconds(1)
-        );
+        if (ttd->empty()) {
+            cerr << "waiting" << endl;
+            shapes_ttl->wait(lock, [ttd]{return !ttd->empty();});
+        }
+        else {
+            now = getCurrentTime();
+            cerr << "sleeping " << ttd->begin()->first- now << endl;
+            shapes_ttl->wait_for(lock, chrono::microseconds(ttd->begin()->first- now));
+        }
     }
 }
 
@@ -79,7 +94,7 @@ CRQRobotComm::CRQRobotComm(CRQScene *commScene, unsigned short port): QUdpSocket
         exit (-1);
     }
 
-    new std::thread(ttl_checker, &ttd, &ShapesDrawn, scene);
+    new std::thread(ttl_checker, &ttd, &ShapesDrawn, scene, &m, &shapes_ttl);
 }
 
 /*============================================================================*/
@@ -106,7 +121,6 @@ void delete_item(CRQScene *scene, std::unordered_map<int, QGraphicsItem*> *Shape
  */
 
 /*============================================================================*/
-
 
 void CRQRobotComm::dataControler() //Called when the socket receive something
 {
@@ -169,12 +183,22 @@ void CRQRobotComm::dataControler() //Called when the socket receive something
                         item->setVisible( true );
                         item->setZValue(8);
                         item->setOpacity(1);
-                        if(ShapesDrawn.count(shape->getId())==1){
-                            scene->removeItem(ShapesDrawn[shape->getId()]);
+
+                        {
+                            std::lock_guard<std::mutex> lock(m);
+                            bool notify = false;
+                            if (ttd.empty() || ttd.begin()->first > getCurrentTime() + shape->getTTL()) {
+                                notify = true;
+                            }
+                            if (ShapesDrawn.count(shape->getId()) == 1) {
+                                scene->removeItem(ShapesDrawn[shape->getId()]);
+                            }
+                            ShapesDrawn[shape->getId()] = item;
+                            ttd[getCurrentTime() + shape->getTTL() * 1000] = {item, shape->getId()};
+                            if (notify) {
+                                shapes_ttl.notify_all();
+                            }
                         }
-                        ShapesDrawn[shape->getId()] = item;
-                        //ttd[time(0) + shape->getTTL()/1000] = {item, shape->getId()};
-                        ttd[getCurrentTime() + shape->getTTL()] = {item, shape->getId()};
                     }
                     break;
                 case CRQDrawHandler::INTERNAL_KNOWLEDGE:

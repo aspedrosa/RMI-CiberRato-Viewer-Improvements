@@ -18,6 +18,8 @@
 #include <map>
 #include <unordered_map>
 #include <chrono>
+#include <mutex>
+#include <condition_variable>
 #include <QUdpSocket>
 #include <QHostAddress>
 #include <QTimer>
@@ -65,6 +67,8 @@ public slots:
     void dataControler();
 
 private:
+    std::mutex m;
+    std::condition_variable shapes_ttl;
     CRQScene *scene;			//Scene
     std::map<long, shape_info> ttd;
     std::unordered_map<int, QGraphicsItem*> ShapesDrawn;
