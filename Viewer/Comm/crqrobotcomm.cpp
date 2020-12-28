@@ -29,9 +29,18 @@
 
 using namespace std;
 
-[[noreturn]] void ttl_checker(std::map<time_t, shape_info> *ttd, std::unordered_map<int, QGraphicsItem*> *ShapesDrawn, QGraphicsScene *scene) {
+long getCurrentTime(){
+    auto now = std::chrono::system_clock::now();
+    auto now_ms = std::chrono::time_point_cast<std::chrono::milliseconds>(now);
+    auto epoch = now_ms.time_since_epoch();
+    auto value = std::chrono::duration_cast<std::chrono::milliseconds>(epoch);
+    long duration = value.count();
+    return duration;
+}
+
+[[noreturn]] void ttl_checker(std::map<long, shape_info> *ttd, std::unordered_map<int, QGraphicsItem*> *ShapesDrawn, QGraphicsScene *scene) {
     while (1) {
-        time_t now = time(0);
+        long now = getCurrentTime();
         auto first = ttd->begin();
         if (now > first->first) {
             int id = first->second.id;
@@ -98,6 +107,7 @@ void delete_item(CRQScene *scene, std::unordered_map<int, QGraphicsItem*> *Shape
 
 /*============================================================================*/
 
+
 void CRQRobotComm::dataControler() //Called when the socket receive something
 {
     while (hasPendingDatagrams())
@@ -163,7 +173,8 @@ void CRQRobotComm::dataControler() //Called when the socket receive something
                             scene->removeItem(ShapesDrawn[shape->getId()]);
                         }
                         ShapesDrawn[shape->getId()] = item;
-                        ttd[time(0) + shape->getTTL()] = {item, shape->getId()};
+                        //ttd[time(0) + shape->getTTL()/1000] = {item, shape->getId()};
+                        ttd[getCurrentTime() + shape->getTTL()] = {item, shape->getId()};
                     }
                     break;
                 case CRQDrawHandler::INTERNAL_KNOWLEDGE:

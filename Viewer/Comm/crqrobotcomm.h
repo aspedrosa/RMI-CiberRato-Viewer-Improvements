@@ -66,7 +66,7 @@ public slots:
 
 private:
     CRQScene *scene;			//Scene
-    std::map<time_t, shape_info> ttd;
+    std::map<long, shape_info> ttd;
     std::unordered_map<int, QGraphicsItem*> ShapesDrawn;
     // TODO concurrent maps
 };

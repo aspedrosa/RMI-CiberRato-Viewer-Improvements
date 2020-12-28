@@ -3,13 +3,13 @@
 import socket
 
 mandatory_fields = {
-    "e": ["red", "green", "blue", "x", "y", "Diam_horizontal", "Diam_vertical", "id"],
-    "c": ["red", "green", "blue", "x", "y", "Diam"],
-    "r": ["red", "green", "blue", "x", "y", "Width", "Height"],
-    "s": ["red", "green", "blue", "x", "y", "Width"],
-    "l": ["red", "green", "blue", "x0", "y0", "x1", "y1"],
-    "q": ["red", "green", "blue", "text"],
-    "p": ["red", "green", "blue"],
+    "e": ["red", "green", "blue", "x", "y", "Diam_horizontal", "Diam_vertical", "id", "ttl"],
+    "c": ["red", "green", "blue", "x", "y", "Diam", "id", "ttl"],
+    "r": ["red", "green", "blue", "x", "y", "Width", "Height", "id", "ttl"],
+    "s": ["red", "green", "blue", "x", "y", "Width", "id", "ttl"],
+    "l": ["red", "green", "blue", "x0", "y0", "x1", "y1", "id", "ttl"],
+    "q": ["red", "green", "blue", "text", "id", "ttl"],
+    "p": ["red", "green", "blue", "id", "ttl"],
 }
 
 shapes = {
