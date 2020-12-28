@@ -62,7 +62,6 @@ CRQDataView::CRQDataView(CRReply *r, CRLab *l, QString skinFName, QWidget *paren
     robots.resize( nRobots ); // robot is one vector of CRQRobotInfo
 
     adjustSize();
-
 }
 
 CRQDataView::~CRQDataView()
@@ -82,6 +81,46 @@ CRQDataView::~CRQDataView()
     robots.clear();
 
     delete ui;
+}
+
+void CRQDataView::addItem(QString item){
+    auto item_splitted = item.split(".");
+
+    QTreeWidgetItem *topLevelItem = NULL;
+    QTreeWidgetItem *subLevelItem = NULL;
+    for(int i=0; i<item_splitted.length(); i++){
+        if(i==0){
+            auto item_list = ui->treeWidget->findItems(item_splitted[i], Qt::MatchExactly);
+            if(item_list.length() > 0){
+                topLevelItem = item_list[0];
+            }
+            if(topLevelItem == NULL){
+                // Create new item (top level item)
+                topLevelItem = new QTreeWidgetItem(ui->treeWidget);
+                topLevelItem->setCheckState(0, Qt::Unchecked);
+                ui->treeWidget->addTopLevelItem(topLevelItem);
+                topLevelItem->setText(0,item_splitted[i]);
+            }
+        }
+        else{
+            auto item_list = ui->treeWidget->findItems(item_splitted[i], Qt::MatchExactly);
+            if(item_list.length() > 0){
+                for(int j = 0;j<item_list.length();j++){
+                    if(item_list[j]->parent() == topLevelItem){
+                        subLevelItem = item_list[j];
+                    }
+                }
+            }
+            if(subLevelItem == NULL){
+                subLevelItem = new QTreeWidgetItem(topLevelItem);
+                subLevelItem->setCheckState(0, Qt::Unchecked);
+                // Set text for item
+                subLevelItem->setText(0,item_splitted[i]);
+            }
+            topLevelItem = subLevelItem;
+            subLevelItem = NULL;
+        }
+    }
 }
 
 void CRQDataView::skin(QString skinFileName)

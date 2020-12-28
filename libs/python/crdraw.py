@@ -102,7 +102,7 @@ if __name__ == "__main__":
     crd.bufferOnOff(False)
     points = [(0, 50), (400, 60), (50, 30), (700, 200)]
     crd.drawPolygon(1, points, (0, 0, 255))
-    crd.drawLine2(2, (700, 200), (850, 250), (255, 0, 0), 20000)
-    crd.drawSquare(3, 20, 700, 200, (255, 255, 0), 30000)
-    crd.drawRectangle(4, 50, 20, 700, 200, (255, 0, 0), 2500)
+    crd.drawLine2(2, (700, 200), (850, 250), (255, 0, 0))
+    crd.drawSquare(3, 20, 700, 200, (255, 255, 0))
+    crd.drawRectangle(4, 50, 20, 700, 200, (255, 0, 0))
     crd.drawAll()

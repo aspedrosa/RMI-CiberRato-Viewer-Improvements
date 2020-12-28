@@ -59,6 +59,8 @@ public:
      */
     void skin(QString skinFileName);
 
+    void addItem(QString item);
+
 signals:
     /*! Signal emited everytime a new message is received.
      * It is used to update the time display.
