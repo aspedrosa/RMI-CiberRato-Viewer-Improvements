@@ -198,6 +198,10 @@ void CRQDataView::skin(QString skinFileName)
     fclose(fp);
 }
 
+void CRQDataView::deleteTreeWidget() {
+   delete ui->treeWidget;
+}
+
 void CRQDataView::update( CRRobot *rob )
 {
     if ( (rob->id() > 0) && (rob->id() < (nRobots + 1) ) )

@@ -35,7 +35,7 @@ CRQLabView::CRQLabView(CRMainParameters *p, QWidget *parent) :
     // Communications object
     QString host( param->serverAddr );
     simulator_comm = new CRQSimulatorComm(this, scene, lab, host, param->port,
-                                param->control, param->autoConnect, param->autoStart);
+                                param->control, param->autoConnect, param->autoStart, param->agent_viewer=='y');
     if(param->agent_viewer=='y') {
         robot_comm = new CRQRobotComm(scene, param->agent_port, &simulator_comm->dataView);
     }

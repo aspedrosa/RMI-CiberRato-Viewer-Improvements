@@ -54,7 +54,7 @@ CRQSimulatorComm::CRQSimulatorComm()
 
 CRQSimulatorComm::CRQSimulatorComm(CRQLabView *lb, CRQScene *commScene, CRLab *commLab,
                                    QString h, unsigned short port_, const char c , const char autoC,
-                                   const char autoS)
+                                   const char autoS, bool enable_tree)
     : QUdpSocket(), timer(this)
 {
     scoreLayout = lb->findChild<QVBoxLayout *>("scoreLayout");
@@ -69,6 +69,7 @@ CRQSimulatorComm::CRQSimulatorComm(CRQLabView *lb, CRQScene *commScene, CRLab *c
 	host = h;
 	skinFName = lb->getSkin();
     isConnected = false;
+    this->enable_tree = enable_tree;
 
     QObject::connect (this, SIGNAL(readyRead()), SLOT(dataControler()));
 
@@ -284,7 +285,9 @@ void CRQSimulatorComm::dataControler() //Called when the socket receive somethin
                     dataView = new CRQDataView( reply, lab, skinFName, 0);
                     scoreLayout->addWidget(dataView, 1, Qt::AlignTop);
                     dataView->show();
-
+                    if(!enable_tree) {
+                        dataView->deleteTreeWidget();
+                    }
                     // the control window - not supported / no need
                     /*commControlPanel = new CRQControlPanel( scene, this,
                                 skinFName, mainWindow->soundStatus, mainWindow,
