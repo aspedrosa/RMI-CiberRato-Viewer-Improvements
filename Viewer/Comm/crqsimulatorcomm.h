@@ -58,7 +58,7 @@ public:
 	 */
     CRQSimulatorComm(CRQLabView *lb, CRQScene *commScene, CRLab *commLab,
                      QString host, unsigned short port, const char c, const char autoC,
-                     const char autoS);
+                     const char autoS, bool enable_tree);
 	/*! This is the destructor.
 	 */
 	~CRQSimulatorComm();
@@ -125,7 +125,7 @@ private:
     QString skinFName;
     QVBoxLayout *scoreLayout;
     bool isConnected;
-
+    bool enable_tree;
 };
 
 
