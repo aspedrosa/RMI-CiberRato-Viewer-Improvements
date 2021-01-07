@@ -11,6 +11,8 @@ typedef unsigned char bool;
 #endif
 
 int InitDraw(char *host, unsigned short port);
+int InitDraw2(unsigned short port);
+int InitDraw3();
 void bufferOnOff(bool on_off);
 void setColor(int r, int g, int b);
 void drawAll();
@@ -21,7 +23,7 @@ void drawRectangle(char *id, double width, double height, double x, double y, Co
 void drawSquare(char *id, double width, double x, double y, Color *color, int time_to_live);
 void drawPolygon(char *id, int num_of_points, Point *point_list, Color *color, int time_to_live);
 void drawLine(char *id, double x0, double y0, double x1, double y1, Color *color, int time_to_live);
-void drawLine(char *id, Point &x0, Point &x1, Color *color, int time_to_live);
+void drawLine2(char *id, Point *p0, Point *p1, Color *color, int time_to_live);
 
 #ifdef __cplusplus
 }

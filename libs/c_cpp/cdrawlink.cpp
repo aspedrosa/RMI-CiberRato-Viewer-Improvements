@@ -4,13 +4,13 @@
 
 #include "cdrawlink.h"
 
-#include <strstream>
+#include <iostream>
 
-CDrawLink::CDrawLink(char *host, unsigned short port) : port(port, host) {
-    color = {0, 0, 0};
+CDrawLink::CDrawLink(char *host, unsigned short port) : port(port, host,0) {
+    this->color = {0, 0, 0};
+    msg_index = sprintf(msg, "<Shapes>");
+    initial_msg_index = msg_index;
     buffered = true;
-    msg_index = 0;
-
     Status = 0;
 
     if(!this->port.init())
@@ -20,6 +20,8 @@ CDrawLink::CDrawLink(char *host, unsigned short port) : port(port, host) {
         return;
     }
 }
+
+CDrawLink::~CDrawLink() = default;
 
 void CDrawLink::bufferOnOff(bool on_off){
     buffered = on_off;
@@ -32,12 +34,15 @@ void CDrawLink::setColor(int r, int g, int b){
 }
 
 void CDrawLink::sendMessage(){
+    msg_index += sprintf(msg + msg_index, "</Shapes>");
+    msg[msg_index+ 1] = '\0';
+    std::cerr << "msg: "  << msg << std::endl;
     if(!port.send_info(msg, msg_index+1)) {
         // cerr << "Failed Send Init" << endl;
         Status=-1;
         return;
     }
-    msg_index = 0;
+    msg_index = initial_msg_index;
 }
 
 void CDrawLink::drawAll(){
@@ -134,7 +139,7 @@ void CDrawLink::drawPolygon(char *id, int num_of_points, Point *point_list, Colo
 
 
     for(int i = 0; i < num_of_points; i++){
-        msg_index += sprintf(msg+msg_index, R"(<Point x="%f" y="%f"></Point)", point_list[i].x, point_list[i].y);
+        msg_index += sprintf(msg+msg_index, R"(<Point x="%f" y="%f"></Point>)", point_list[i].x, point_list[i].y);
     }
 
     msg_index += sprintf(msg+msg_index, "</Polygon>");
@@ -164,6 +169,6 @@ void CDrawLink::drawLine(char *id, double x0, double y0, double x1, double y1, C
     }
 }
 
-void CDrawLink::drawLine(char *id, Point &p0, Point &p1, Color *color, int time_to_live) {
+void CDrawLink::drawLine2(char *id, Point &p0, Point &p1, Color *color, int time_to_live) {
     drawLine(id, p0.x, p0.y, p1.x, p1.y, color, time_to_live);
 }

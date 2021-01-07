@@ -3,10 +3,24 @@
 
 #include <clocale>
 
+#define DEFAULT_PORT 5000
+
 static CDrawLink *link=nullptr;
 
 int InitDraw(char *host, unsigned short port) {
     link = new CDrawLink(host, port);
+    setlocale(LC_ALL, "C");
+    return link->status();
+}
+
+int InitDraw2(unsigned short port) {
+    link = new CDrawLink("0.0.0.0", port);
+    setlocale(LC_ALL, "C");
+    return link->status();
+}
+
+int InitDraw3() {
+    link = new CDrawLink("0.0.0.0", DEFAULT_PORT);
     setlocale(LC_ALL, "C");
     return link->status();
 }
@@ -51,6 +65,6 @@ void drawLine(char *id, double x0, double y0, double x1, double y1, Color *color
     link->drawLine(id,x0,y0,x1,y1,color,time_to_live);
 }
 
-void drawLine(char *id, Point &x0, Point &x1, Color *color=nullptr, int time_to_live=-1){
-    link->drawLine(id, x0, x1, color, time_to_live);
+void drawLine2(char *id, Point *x0, Point *x1, Color *color=nullptr, int time_to_live=-1){
+    link->drawLine2(id, *x0, *x1, color, time_to_live);
 }
