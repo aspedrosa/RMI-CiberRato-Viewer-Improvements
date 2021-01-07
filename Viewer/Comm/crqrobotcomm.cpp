@@ -40,49 +40,48 @@ long getCurrentTime(){
 
 [[noreturn]] void ttl_checker(
         std::map<long, shape_info> *ttd,
-        std::unordered_map<int, QGraphicsItem*> *ShapesDrawn,
+        std::unordered_map<QString, QGraphicsItem*> *ShapesDrawn,
         QGraphicsScene *scene,
         std::mutex *m,
-        std::condition_variable *shapes_ttl
+        std::condition_variable *shapes_ttl,
+        CRQDataView **data_view
         ) {
 
     std::unique_lock<std::mutex> lock(*m);
     while (1) {
         cerr << "working" << endl;
-        long now = getCurrentTime();
-        auto first = ttd->begin();
-        if (now > first->first) {
-            int id = first->second.id;
-            QGraphicsItem* item = first->second.item;
-            if (ShapesDrawn->count(id) > 0 && ShapesDrawn->at(id) == item) {  // TODO find()
-                scene->removeItem(item);
-                ShapesDrawn->erase(id);
-            }
-            ttd->erase(first->first);
-        }
-
         if (ttd->empty()) {
             cerr << "waiting" << endl;
             shapes_ttl->wait(lock, [ttd]{return !ttd->empty();});
         }
         else {
-            now = getCurrentTime();
-            cerr << "sleeping " << ttd->begin()->first- now << endl;
-            shapes_ttl->wait_for(lock, chrono::microseconds(ttd->begin()->first- now));
+            long now = getCurrentTime();
+            auto first = ttd->begin();
+            if (now > first->first) {
+                QString id = first->second.id;
+                QGraphicsItem* item = first->second.item;
+                if (ShapesDrawn->count(id) > 0 && ShapesDrawn->at(id) == item) {  // TODO find()
+                    scene->removeItem(item);
+                    (*data_view)->removeItem(id);
+                    ShapesDrawn->erase(id);
+                }
+                ttd->erase(first->first);
+            }
+
+            if (!ttd->empty()) {
+                now = getCurrentTime();
+                cerr << "sleeping " << ttd->begin()->first- now << endl;
+                shapes_ttl->wait_for(lock, chrono::microseconds(ttd->begin()->first- now));
+            }
         }
     }
 }
 
-
-CRQRobotComm::CRQRobotComm()
-{
-
-}
-
 /*============================================================================*/
 
-CRQRobotComm::CRQRobotComm(CRQScene *commScene, unsigned short port): QUdpSocket() {
+CRQRobotComm::CRQRobotComm(CRQScene *commScene, unsigned short port, CRQDataView **data_view): QUdpSocket() {
     scene = commScene;	// Scene passed by main
+    this->data_view = data_view;
 
     QObject::connect (this, SIGNAL(readyRead()), SLOT(dataControler()));
 
@@ -94,7 +93,7 @@ CRQRobotComm::CRQRobotComm(CRQScene *commScene, unsigned short port): QUdpSocket
         exit (-1);
     }
 
-    new std::thread(ttl_checker, &ttd, &ShapesDrawn, scene, &m, &shapes_ttl);
+    new std::thread(ttl_checker, &ttd, &ShapesDrawn, scene, &m, &shapes_ttl, data_view);
 }
 
 /*============================================================================*/
@@ -195,6 +194,9 @@ void CRQRobotComm::dataControler() //Called when the socket receive something
                             }
                             ShapesDrawn[shape->getId()] = item;
                             ttd[getCurrentTime() + shape->getTTL() * 1000] = {item, shape->getId()};
+                            if (*data_view != NULL) {
+                                (*data_view)->addItem(shape->getId());
+                            }
                             if (notify) {
                                 shapes_ttl.notify_all();
                             }

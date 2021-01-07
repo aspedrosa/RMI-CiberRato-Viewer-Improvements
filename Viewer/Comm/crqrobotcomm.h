@@ -23,6 +23,7 @@
 #include <QUdpSocket>
 #include <QHostAddress>
 #include <QTimer>
+#include <QHash>
 #include "../Lab/crlab.h"
 #include "../Lab/crrobot.h"
 #include "../Lab/crgrid.h"
@@ -34,12 +35,21 @@
 
 #include <QtGui>
 
+namespace std {
+    // define hash function for the QString class
+    template<> struct hash<QString> {
+        std::size_t operator()(const QString& s) const noexcept {
+            return (size_t) qHash(s);
+        }
+    };
+}
+
 
 class CRQLabView;
 
 typedef struct {
     QGraphicsItem* item;
-    int id;
+    QString id;
 } shape_info;
 
 class CRQRobotComm : public QUdpSocket
@@ -52,14 +62,10 @@ public:
      *	\param host the address of simulator.
      *	\param port the port of simulator.
      */
-    CRQRobotComm(CRQScene *commScene, unsigned short port);
+    CRQRobotComm(CRQScene *commScene, unsigned short port, CRQDataView **data_view);
     /*! This is the destructor.
      */
     ~CRQRobotComm();
-
-    /*! One constructor without parameters.
-     */
-    CRQRobotComm();
 
 public slots:
     /*! Function called by the notifier to process the received information.
@@ -71,8 +77,8 @@ private:
     std::condition_variable shapes_ttl;
     CRQScene *scene;			//Scene
     std::map<long, shape_info> ttd;
-    std::unordered_map<int, QGraphicsItem*> ShapesDrawn;
-    // TODO concurrent maps
+    std::unordered_map<QString, QGraphicsItem*> ShapesDrawn;
+    CRQDataView **data_view;
 };
 
 #endif //VIEWER_CRQAGENTCOMM_H

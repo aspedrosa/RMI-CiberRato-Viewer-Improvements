@@ -61,6 +61,8 @@ public:
 
     void addItem(QString item);
 
+    void removeItem(QString item);
+
 signals:
     /*! Signal emited everytime a new message is received.
      * It is used to update the time display.

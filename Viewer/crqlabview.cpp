@@ -37,7 +37,7 @@ CRQLabView::CRQLabView(CRMainParameters *p, QWidget *parent) :
     simulator_comm = new CRQSimulatorComm(this, scene, lab, host, param->port,
                                 param->control, param->autoConnect, param->autoStart);
     if(param->agent_viewer=='y') {
-        robot_comm = new CRQRobotComm(scene, param->agent_port);
+        robot_comm = new CRQRobotComm(scene, param->agent_port, &simulator_comm->dataView);
     }
     ui->graphicsView_lab->setBackgroundBrush( QColor( 128, 128, 128 ));
     ui->graphicsView_lab->setScene(scene);

@@ -45,7 +45,7 @@ bool CRQDrawHandler::startElement( const QString&, const QString&,
                 color = new QColor(red_color.toInt(), green_color.toInt(), blue_color.toInt());
             }
 
-            shape_id = attr.value(QString("id")).toInt();
+            shape_id = attr.value(QString("id"));
 
             QString ttl_string = attr.value(QString("ttl"));
             if (ttl_string.isNull()) {

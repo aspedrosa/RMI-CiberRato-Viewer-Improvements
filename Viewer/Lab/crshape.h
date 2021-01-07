@@ -35,7 +35,7 @@ private:
 
 class Shape {
 public:
-    Shape(QColor &color, int id, unsigned int time) {
+    Shape(QColor &color, QString id, unsigned int time) {
         this->color = color;
         this->id = id;
         this->ttl = time;
@@ -48,7 +48,7 @@ public:
         return color;
     }
 
-    int getId(){
+    QString getId(){
         return id;
     }
 
@@ -58,13 +58,13 @@ public:
 
 private:
     QColor color;
-    int id;
+    QString id;
     unsigned int ttl;
 };
 
 class Quote : public Shape {
 public:
-    Quote(QColor &color, int id, QString &text, unsigned int time) : Shape(color, id, time){
+    Quote(QColor &color, QString id, QString &text, unsigned int time) : Shape(color, id, time){
         this->text;
     }
     ~Quote() {
@@ -81,7 +81,7 @@ private:
 
 class Line : public Shape {
 public:
-    Line(QColor &color, int id, Point &p_begin, Point &p_end, unsigned int time) : Shape (color, id, time) {
+    Line(QColor &color, QString id, Point &p_begin, Point &p_end, unsigned int time) : Shape (color, id, time) {
         this->p_begin = p_begin;
         this->p_end = p_end;
     }
@@ -103,7 +103,7 @@ private:
 
 class Ellipse : public Shape {
 public:
-    Ellipse(QColor &color, int id, Point &p, double diam_vertical, double diam_horizontal, unsigned int time) : Shape(color, id, time) {
+    Ellipse(QColor &color, QString id, Point &p, double diam_vertical, double diam_horizontal, unsigned int time) : Shape(color, id, time) {
         this->p = p;
         this->diam_vertical = diam_vertical;
         this->diam_horizontal = diam_horizontal;
@@ -131,12 +131,12 @@ private:
 
 class Circle : public Ellipse {
 public:
-    Circle(QColor &color, int id, Point &p, double diam, unsigned int time) : Ellipse(color, id, p, diam, diam, time) {}
+    Circle(QColor &color, QString id, Point &p, double diam, unsigned int time) : Ellipse(color, id, p, diam, diam, time) {}
 };
 
 class Polygon : public Shape {
 public:
-    Polygon(QColor &color, int id, QVector<QPointF> &points, unsigned int time) : Shape(color, id, time){
+    Polygon(QColor &color, QString id, QVector<QPointF> &points, unsigned int time) : Shape(color, id, time){
         this->points = points;
 
     }
@@ -154,7 +154,7 @@ private:
 
 class Rectangle : public Shape {
 public:
-    Rectangle(QColor &color, int id, Point &p, double width, double height, unsigned int time) : Shape(color, id, time){
+    Rectangle(QColor &color, QString id, Point &p, double width, double height, unsigned int time) : Shape(color, id, time){
         this-> p = p;
         this->width = width;
         this-> height = height;
@@ -183,7 +183,7 @@ private:
 
 class Square : public Rectangle {
 public:
-    Square(QColor &color, int id, Point &p, double width, unsigned int time) : Rectangle(color, id, p, width, width, time){}
+    Square(QColor &color, QString id, Point &p, double width, unsigned int time) : Rectangle(color, id, p, width, width, time){}
 };
 
 #endif //VIEWER_CRSHAPE_H

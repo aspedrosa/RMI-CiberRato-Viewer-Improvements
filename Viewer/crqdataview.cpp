@@ -103,11 +103,12 @@ void CRQDataView::addItem(QString item){
             }
         }
         else{
-            auto item_list = ui->treeWidget->findItems(item_splitted[i], Qt::MatchExactly);
+            auto item_list = ui->treeWidget->findItems(item_splitted[i], Qt::MatchExactly | Qt::MatchRecursive);
             if(item_list.length() > 0){
-                for(int j = 0;j<item_list.length();j++){
-                    if(item_list[j]->parent() == topLevelItem){
-                        subLevelItem = item_list[j];
+                for(auto & j : item_list){
+                    if(j->parent() == topLevelItem){
+                        subLevelItem = j;
+                        break;
                     }
                 }
             }
@@ -119,6 +120,46 @@ void CRQDataView::addItem(QString item){
             }
             topLevelItem = subLevelItem;
             subLevelItem = NULL;
+        }
+    }
+}
+
+void CRQDataView::removeItem(QString item) {
+    auto item_splitted = item.split(".");
+
+    QTreeWidgetItem *topLevelItem = NULL;
+    QTreeWidgetItem *subLevelItem = NULL;
+    int i;
+    for(i=0; i<item_splitted.length(); i++){
+        cerr << "item_splited[i]: " << item_splitted[i].toStdString() << endl;
+        if(i==0){
+            auto item_list = ui->treeWidget->findItems(item_splitted[i], Qt::MatchExactly);
+            topLevelItem = item_list[0];
+        }
+        else{
+            auto item_list = ui->treeWidget->findItems(item_splitted[i], Qt::MatchExactly | Qt::MatchRecursive);
+            if(item_list.length() > 0){
+                for(auto & j : item_list){
+                    if(j->parent() == topLevelItem){
+                        subLevelItem = j;
+                        break;
+                    }
+                }
+            }
+            topLevelItem = subLevelItem;
+            subLevelItem = NULL;
+        }
+    }
+
+    for(i=0; i<item_splitted.length(); i++){
+        subLevelItem = topLevelItem;
+        topLevelItem = subLevelItem->parent();
+        if (subLevelItem->childCount() == 0) {
+            ui->treeWidget->removeItemWidget(subLevelItem, 0);
+            delete subLevelItem;
+        }
+        else {
+            break;
         }
     }
 }
