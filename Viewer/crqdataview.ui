@@ -20,42 +20,6 @@
    <string>Form</string>
   </property>
   <layout class="QGridLayout" name="gridLayout_2">
-   <item row="2" column="6">
-    <widget class="QLabel" name="label_4">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="minimumSize">
-      <size>
-       <width>80</width>
-       <height>0</height>
-      </size>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>80</width>
-       <height>16777215</height>
-      </size>
-     </property>
-     <property name="font">
-      <font>
-       <family>Courier</family>
-       <pointsize>10</pointsize>
-       <weight>75</weight>
-       <bold>true</bold>
-      </font>
-     </property>
-     <property name="text">
-      <string>Score</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignCenter</set>
-     </property>
-    </widget>
-   </item>
    <item row="4" column="2" rowspan="3" colspan="5">
     <layout class="QGridLayout" name="gridLayout_Robots">
      <property name="spacing">
@@ -112,51 +76,8 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="3">
-    <widget class="QLabel" name="label_2">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="minimumSize">
-      <size>
-       <width>100</width>
-       <height>0</height>
-      </size>
-     </property>
-     <property name="font">
-      <font>
-       <family>Courier</family>
-       <pointsize>10</pointsize>
-       <weight>75</weight>
-       <bold>true</bold>
-      </font>
-     </property>
-     <property name="text">
-      <string>Name</string>
-     </property>
-    </widget>
-   </item>
-   <item row="4" column="1">
-    <spacer name="horizontalSpacer">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="sizeType">
-      <enum>QSizePolicy::MinimumExpanding</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>20</width>
-       <height>1</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
-   <item row="2" column="4">
-    <widget class="QLabel" name="label_5">
+   <item row="2" column="6">
+    <widget class="QLabel" name="label_4">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
        <horstretch>0</horstretch>
@@ -165,13 +86,13 @@
      </property>
      <property name="minimumSize">
       <size>
-       <width>70</width>
+       <width>80</width>
        <height>0</height>
       </size>
      </property>
      <property name="maximumSize">
       <size>
-       <width>70</width>
+       <width>80</width>
        <height>16777215</height>
       </size>
      </property>
@@ -184,7 +105,7 @@
       </font>
      </property>
      <property name="text">
-      <string>Time</string>
+      <string>Score</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>
@@ -625,6 +546,69 @@
      </property>
     </widget>
    </item>
+   <item row="2" column="4">
+    <widget class="QLabel" name="label_5">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>70</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>70</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <property name="font">
+      <font>
+       <family>Courier</family>
+       <pointsize>10</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>Time</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="3">
+    <widget class="QLabel" name="label_2">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>100</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="font">
+      <font>
+       <family>Courier</family>
+       <pointsize>10</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>Name</string>
+     </property>
+    </widget>
+   </item>
    <item row="2" column="5">
     <widget class="QLabel" name="label_3">
      <property name="sizePolicy">
@@ -674,61 +658,35 @@
      </property>
     </spacer>
    </item>
+   <item row="4" column="1">
+    <spacer name="horizontalSpacer">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeType">
+      <enum>QSizePolicy::MinimumExpanding</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>1</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
    <item row="7" column="0" colspan="7">
     <widget class="QTreeWidget" name="treeWidget">
+     <property name="mouseTracking">
+      <bool>false</bool>
+     </property>
      <property name="selectionMode">
-      <enum>QAbstractItemView::MultiSelection</enum>
+      <enum>QAbstractItemView::NoSelection</enum>
      </property>
      <column>
       <property name="text">
-       <string>Root</string>
+       <string>Shapes Filter</string>
       </property>
      </column>
-     <item>
-      <property name="text">
-       <string>1</string>
-      </property>
-      <property name="checkState">
-       <enum>Unchecked</enum>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>2</string>
-      </property>
-      <property name="checkState">
-       <enum>Unchecked</enum>
-      </property>
-      <item>
-       <property name="text">
-        <string>Planning</string>
-       </property>
-       <property name="checkState">
-        <enum>Unchecked</enum>
-       </property>
-       <item>
-        <property name="text">
-         <string>Returning_path</string>
-        </property>
-       </item>
-      </item>
-      <item>
-       <property name="text">
-        <string>Localization</string>
-       </property>
-       <property name="checkState">
-        <enum>Unchecked</enum>
-       </property>
-       <item>
-        <property name="text">
-         <string>GPS</string>
-        </property>
-        <property name="checkState">
-         <enum>Unchecked</enum>
-        </property>
-       </item>
-      </item>
-     </item>
     </widget>
    </item>
   </layout>
