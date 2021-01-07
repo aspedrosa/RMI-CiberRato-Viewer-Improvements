@@ -71,6 +71,7 @@ public slots:
     /*! Function called by the notifier to process the received information.
      */
     void dataControler();
+    void filterItems(QTreeWidgetItem*, int);
 
 private:
     std::mutex m;
@@ -79,6 +80,7 @@ private:
     std::map<long, shape_info> ttd;
     std::unordered_map<QString, QGraphicsItem*> ShapesDrawn;
     CRQDataView **data_view;
+    bool filterTreeWidgetSignalConnected;
 };
 
 #endif //VIEWER_CRQAGENTCOMM_H

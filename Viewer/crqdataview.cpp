@@ -83,6 +83,10 @@ CRQDataView::~CRQDataView()
     delete ui;
 }
 
+QTreeWidget* CRQDataView::getFilterTreeWidget() {
+    return ui->treeWidget;
+}
+
 void CRQDataView::addItem(QString item){
     auto item_splitted = item.split(".");
 
@@ -97,9 +101,10 @@ void CRQDataView::addItem(QString item){
             if(topLevelItem == NULL){
                 // Create new item (top level item)
                 topLevelItem = new QTreeWidgetItem(ui->treeWidget);
-                topLevelItem->setCheckState(0, Qt::Unchecked);
-                ui->treeWidget->addTopLevelItem(topLevelItem);
                 topLevelItem->setText(0,item_splitted[i]);
+                topLevelItem->setCheckState(0, Qt::Checked);
+                topLevelItem->setExpanded(true);
+                ui->treeWidget->addTopLevelItem(topLevelItem);
             }
         }
         else{
@@ -114,9 +119,9 @@ void CRQDataView::addItem(QString item){
             }
             if(subLevelItem == NULL){
                 subLevelItem = new QTreeWidgetItem(topLevelItem);
-                subLevelItem->setCheckState(0, Qt::Unchecked);
-                // Set text for item
-                subLevelItem->setText(0,item_splitted[i]);
+                subLevelItem->setText(0,item_splitted[i]);  // Set text for item
+                subLevelItem->setCheckState(0, Qt::Checked);
+                subLevelItem->setExpanded(true);
             }
             topLevelItem = subLevelItem;
             subLevelItem = NULL;
@@ -131,7 +136,6 @@ void CRQDataView::removeItem(QString item) {
     QTreeWidgetItem *subLevelItem = NULL;
     int i;
     for(i=0; i<item_splitted.length(); i++){
-        cerr << "item_splited[i]: " << item_splitted[i].toStdString() << endl;
         if(i==0){
             auto item_list = ui->treeWidget->findItems(item_splitted[i], Qt::MatchExactly);
             topLevelItem = item_list[0];

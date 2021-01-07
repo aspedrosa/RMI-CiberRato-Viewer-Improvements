@@ -29,6 +29,7 @@
  */
 
 #include <QWidget>
+#include <QTreeWidgetItem>
 
 #include "Lab/crlab.h"
 #include "Comm/crreply.h"
@@ -62,6 +63,8 @@ public:
     void addItem(QString item);
 
     void removeItem(QString item);
+
+    QTreeWidget* getFilterTreeWidget();
 
 signals:
     /*! Signal emited everytime a new message is received.
