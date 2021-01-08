@@ -60,13 +60,15 @@ public:
      */
     void skin(QString skinFileName);
 
-    void addItem(QString item);
+    void addItem(QString &item);
 
-    void removeItem(QString item);
+    void removeItem(QString &item);
 
     QTreeWidget* getFilterTreeWidget();
 
     void deleteTreeWidget();
+
+    bool isItemChecked(QString &item);
 
 signals:
     /*! Signal emited everytime a new message is received.

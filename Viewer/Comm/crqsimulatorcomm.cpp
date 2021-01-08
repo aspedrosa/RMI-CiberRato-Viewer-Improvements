@@ -290,7 +290,7 @@ void CRQSimulatorComm::dataControler() //Called when the socket receive somethin
                     if(!enable_tree) {
                         dataView->deleteTreeWidget();
                     }
-                    else if (robotComm == NULL){
+                    else {
                         robotComm = new CRQRobotComm(scene, draw_port, &dataView);
                     }
                     // the control window - not supported / no need
@@ -364,6 +364,7 @@ void CRQSimulatorComm::closeWindows(void)
 
     if (dataView != NULL)
     {
+        delete robotComm;
         //dataView->close();
         dataView->hide();
         delete dataView;

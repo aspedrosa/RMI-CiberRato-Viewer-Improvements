@@ -10,6 +10,8 @@
 #include <QPointF>
 #include <QVector>
 
+#define ZOOM 34
+
 class Point {
 public:
     Point() {
@@ -17,16 +19,16 @@ public:
     }
 
     Point(double x, double y) {
-        this->x = x;
-        this->y = y;
+        this->x = x * ZOOM;
+        this->y = y * ZOOM;
     }
 
     double get_x() const {
         return x;
     }
 
-    double get_y() const {
-        return y;
+    double get_y(double labSize_y) const {
+        return ZOOM * labSize_y - y;
     }
 
 private:
@@ -48,7 +50,7 @@ public:
         return color;
     }
 
-    QString getId(){
+    QString& getId(){
         return id;
     }
 

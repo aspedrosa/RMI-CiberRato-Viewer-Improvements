@@ -81,6 +81,7 @@ private:
     std::unordered_map<QString, QGraphicsItem*> ShapesDrawn;
     CRQDataView **data_view;
     bool filterTreeWidgetSignalConnected;
+    bool stop;
 };
 
 #endif //VIEWER_CRQAGENTCOMM_H

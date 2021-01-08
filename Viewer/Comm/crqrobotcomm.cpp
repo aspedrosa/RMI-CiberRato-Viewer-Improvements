@@ -39,16 +39,17 @@ long getCurrentTime(){
 }
 
 [[noreturn]] void ttl_checker(
+        std::mutex *m,
+        const bool *stop,
         std::map<long, shape_info> *ttd,
         std::unordered_map<QString, QGraphicsItem*> *ShapesDrawn,
         QGraphicsScene *scene,
-        std::mutex *m,
         std::condition_variable *shapes_ttl,
         CRQDataView **data_view
         ) {
 
     std::unique_lock<std::mutex> lock(*m);
-    while (1) {
+    while (!stop) {
         if (ttd->empty()) {
             shapes_ttl->wait(lock, [ttd]{return !ttd->empty();});
         }
@@ -86,6 +87,7 @@ CRQRobotComm::CRQRobotComm(CRQScene *commScene, unsigned short port, CRQDataView
     scene = commScene;	// Scene passed by main
     this->data_view = data_view;
     filterTreeWidgetSignalConnected = false;
+    stop = false;
 
     QObject::connect (this, SIGNAL(readyRead()), SLOT(dataControler()));
 
@@ -97,14 +99,28 @@ CRQRobotComm::CRQRobotComm(CRQScene *commScene, unsigned short port, CRQDataView
         exit (-1);
     }
 
-    new std::thread(ttl_checker, &ttd, &ShapesDrawn, scene, &m, &shapes_ttl, data_view);
+    new std::thread(ttl_checker, &m, &stop, &ttd, &ShapesDrawn, scene, &shapes_ttl, data_view);
 }
 
 /*============================================================================*/
 
 CRQRobotComm::~CRQRobotComm()
 {
+    stop = true;
+    shapes_ttl.notify_all();
 
+    std::lock_guard<std::mutex> lock(m);
+    QObject::disconnect(
+            (*data_view)->getFilterTreeWidget(),
+            SIGNAL(itemChanged(QTreeWidgetItem*, int)),
+            this,
+            SLOT(filterItems(QTreeWidgetItem*, int))
+    );
+
+    ttd.clear();
+    for (auto &entry : ShapesDrawn) {
+        scene->removeItem(entry.second);
+    }
 }
 
 void CRQRobotComm::filterItems(QTreeWidgetItem *item, int _) {
@@ -161,21 +177,22 @@ void CRQRobotComm::dataControler() //Called when the socket receive something
                         QGraphicsItem *item;
                         if (dynamic_cast<Ellipse*>(shape)) {
                             auto *circle = (Ellipse*) shape;
-                            item = new QGraphicsEllipseItem(circle->get_p().get_x(), circle->get_p().get_y(), circle->get_diam_horizontal(), circle->get_diam_vertical(), 0, scene);
+                            item = new QGraphicsEllipseItem(circle->get_p().get_x(), circle->get_p().get_y(scene->lab->labSize().y()), circle->get_diam_horizontal(), circle->get_diam_vertical(), 0, scene);
                         } else if (dynamic_cast<Rectangle*>(shape)) {
                             auto *rectangle = (Rectangle*) shape;
-                            item = new QGraphicsRectItem(rectangle->get_p().get_x(), rectangle->get_p().get_y(), rectangle->get_width(), rectangle->get_height(), 0, scene);
+                            item = new QGraphicsRectItem(rectangle->get_p().get_x(), rectangle->get_p().get_y(scene->lab->labSize().y()), rectangle->get_width(), rectangle->get_height(), 0, scene);
                         } else if (dynamic_cast<Line*>(shape)) {
                             auto *line = (Line*) shape;
                             QGraphicsLineItem a;
-                            item = new QGraphicsLineItem(line->get_p_begin().get_x(), line->get_p_begin().get_y(), line->get_p_end().get_x(), line->get_p_end().get_y(), 0, scene);
+
+                            item = new QGraphicsLineItem(line->get_p_begin().get_x(), line->get_p_begin().get_y(scene->lab->labSize().y()), line->get_p_end().get_x(), line->get_p_end().get_y(scene->lab->labSize().y()), 0, scene);
                         } else if (dynamic_cast<Quote*>(shape)) {
                             auto *quote = (Quote*) shape;
                             item = new QGraphicsTextItem(quote->get_text(), 0, scene);
                             QFont f;
                             f.setPixelSize(quote->get_font_size());
                             auto *text = (QGraphicsTextItem*) item;
-                            text->setPos(quote->get_p().get_x(),quote->get_p().get_y());
+                            text->setPos(quote->get_p().get_x(),quote->get_p().get_y(scene->lab->labSize().y()));
                             text->setFont(f);
                             text->setDefaultTextColor(shape->get_color());
                         } else if (dynamic_cast<Polygon*>(shape)){
@@ -191,7 +208,7 @@ void CRQRobotComm::dataControler() //Called when the socket receive something
                             auto *line_item = (QGraphicsLineItem*) item;
                             line_item->setPen(QPen(shape->get_color()));
                         }
-                        item->setVisible( true );
+                        item->setVisible((*data_view)->isItemChecked(shape->getId()));
                         item->setZValue(8);
                         item->setOpacity(1);
 
