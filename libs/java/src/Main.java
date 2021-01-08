@@ -1,8 +1,8 @@
-import java.net.SocketException;
+import java.io.IOException;
 
 public class Main {
 
-    public static void main(String[] args) throws SocketException {
+    public static void main(String[] args) throws IOException {
         CRDraw crDraw = new CRDraw(5000);
         crDraw.setColor(255,0,0);
         crDraw.drawEllipse("1.loc.1",50,20,0,0);
