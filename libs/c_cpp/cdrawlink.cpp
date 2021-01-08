@@ -36,7 +36,6 @@ void CDrawLink::setColor(int r, int g, int b){
 void CDrawLink::sendMessage(){
     msg_index += sprintf(msg + msg_index, "</Shapes>");
     msg[msg_index+ 1] = '\0';
-    std::cerr << "msg: "  << msg << std::endl;
     if(!port.send_info(msg, msg_index+1)) {
         // cerr << "Failed Send Init" << endl;
         Status=-1;
@@ -46,7 +45,9 @@ void CDrawLink::sendMessage(){
 }
 
 void CDrawLink::drawAll(){
-    sendMessage();
+    if (buffered) {
+        sendMessage();
+    }
 }
 
 void CDrawLink::drawEllipse(char *id, double diam_vertical, double diam_horizontal, double x, double y, Color *color, int time_to_live){

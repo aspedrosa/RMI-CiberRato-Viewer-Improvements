@@ -17,6 +17,7 @@ int main(int argc, char **argv) {
     //drawLine2(char *id, Point *x0, Point *x1, Color *color, int time_to_live);
 
     setColor(255, 0, 0);
+    bufferOnOff(false);
 
     drawEllipse("5.loc.4", 50, 25, 100, 200, nullptr, -1);
     drawCircle("5.loc.3", 50, 100, 300, nullptr, -1);
@@ -31,5 +32,5 @@ int main(int argc, char **argv) {
     drawPolygon("6.loc.1", 3, points, nullptr, -1);
     drawLine("7.loc.1", 0, 20, 20, 200, nullptr, -1);
     drawLine2("7.loc.2", points, points+1, nullptr, 10000);
-    drawAll();
+    //drawAll();
 }
