@@ -42,6 +42,7 @@ public class CRDraw {
     public static final String DEFAULT_HOST = "localhost";
     public static final int DEFAULT_PORT = 5000;
     public static final int DEFAULT_TTL = 5000;
+    public static final int DEFAULT_FONT_SIZE = 14;
 
     private InetAddress viewerAddress;
     private int viewerPort;
@@ -132,17 +133,26 @@ public class CRDraw {
         drawEllipse(id,diam,diam,x,y,color,time_to_live);
     }
 
-    void drawText(String id, String text) throws IOException {
-        drawText(id,text,color, DEFAULT_TTL);
+    void drawText(String id, String text, double x, double y) throws IOException {
+        drawText(id, DEFAULT_FONT_SIZE,text, x, y, color, DEFAULT_TTL);
     }
-    void drawText(String id, String text, Color color) throws IOException {
-        drawText(id,text,color, DEFAULT_TTL);
+    void drawText(String id, String text, double x, double y, Color color) throws IOException {
+        drawText(id, DEFAULT_FONT_SIZE,text, x, y, color, DEFAULT_TTL);
     }
-    void drawText(String id, String text, int time_to_live) throws IOException {
-        drawText(id,text,color, time_to_live);
+    void drawText(String id, String text, double x, double y, int time_to_live) throws IOException {
+        drawText(id, DEFAULT_FONT_SIZE,text, x, y, color, time_to_live);
     }
-    void drawText(String id, String text, Color color, int time_to_live) throws IOException {
-        String msg = "<Text ttl=\""+time_to_live+"\" id=\""+id+"\" "+color.toString()+" text=\""+text+"\"></Text>";
+    void drawText(String id, int font_size, String text, double x, double y) throws IOException {
+        drawText(id, font_size, text, x, y, color, DEFAULT_TTL);
+    }
+    void drawText(String id, int font_size, String text, double x, double y, Color color) throws IOException {
+        drawText(id, font_size,text, x, y, color, DEFAULT_TTL);
+    }
+    void drawText(String id, int font_size, String text, double x, double y, int time_to_live) throws IOException {
+        drawText(id, font_size, text, x, y, color, time_to_live);
+    }
+    void drawText(String id, int font_size, String text, double x, double y, Color color, int time_to_live) throws IOException {
+        String msg = "<Text ttl=\""+time_to_live+"\" id=\""+id+"\" "+color.toString()+" text=\""+text+"\" x=\""+x+"\" y=\""+y+"\" font_size=\""+font_size+"\"></Text>";
         if(buffered){
             buffer.append(msg);
         }

@@ -164,8 +164,14 @@ void CRQRobotComm::dataControler() //Called when the socket receive something
                             QGraphicsLineItem a;
                             item = new QGraphicsLineItem(line->get_p_begin().get_x(), line->get_p_begin().get_y(), line->get_p_end().get_x(), line->get_p_end().get_y(), 0, scene);
                         } else if (dynamic_cast<Quote*>(shape)) {
-                            auto *text = (Quote*) shape;
-                            item = new QGraphicsTextItem(text->get_text(), 0, scene);
+                            auto *quote = (Quote*) shape;
+                            item = new QGraphicsTextItem(quote->get_text(), 0, scene);
+                            QFont f;
+                            f.setPixelSize(quote->get_font_size());
+                            auto *text = (QGraphicsTextItem*) item;
+                            text->setPos(quote->get_p().get_x(),quote->get_p().get_y());
+                            text->setFont(f);
+                            text->setDefaultTextColor(shape->get_color());
                         } else if (dynamic_cast<Polygon*>(shape)){
                             auto *polygon = (Polygon*) shape;
                             item = new QGraphicsPolygonItem(polygon->get_points(), 0, scene);

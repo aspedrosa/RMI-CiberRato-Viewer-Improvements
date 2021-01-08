@@ -70,7 +70,7 @@ void CDrawLink::drawEllipse(char *id, double diam_vertical, double diam_horizont
     }
 }
 
-void CDrawLink::drawText(char *id, char *text, Color *color, int time_to_live){
+void CDrawLink::drawText(char *id, int font_size, char *text, double x, double y, Color *color, int time_to_live){
     int r,g,b;
     if(color == nullptr){
         r = this->color.r;
@@ -84,8 +84,8 @@ void CDrawLink::drawText(char *id, char *text, Color *color, int time_to_live){
     }
     int ttl = time_to_live == -1 ? ttl_default : time_to_live;
 
-    msg_index += sprintf(msg+msg_index, R"(<Text ttl="%d" id="%s" red="%d" green="%d" blue="%d" text="%s"></Text>)",
-                         ttl,id,r,g,b,text);
+    msg_index += sprintf(msg+msg_index, R"(<Text ttl="%d" id="%s" red="%d" green="%d" blue="%d" text="%s" x="%f" y="%f" font_size="%d"></Text>)",
+                         ttl,id,r,g,b,text,x,y,font_size);
     if(!buffered) {
         sendMessage();
     }

@@ -47,10 +47,10 @@ class CRDraw:
         else:
             self._sendMessage(msg)
 
-    def drawText(self, id, text, color=None, ttl=None):
+    def drawText(self, id, text, x, y, font_size=14, color=None,ttl=None):
         r, g, b = self.color if color is None else color
         ttl = self.ttl if ttl is None else ttl
-        msg = f'<Text ttl="{ttl}" id="{id}" red="{r}" green="{g}" blue="{b}" text="{text}"></Text>'
+        msg = f'<Text ttl="{ttl}" id="{id}" red="{r}" green="{g}" blue="{b}" text="{text}" x="{x}" y="{y}" font_size="{font_size}"></Text>'
         if self.buffered:
             self.buffer.append(msg)
         else:
@@ -100,9 +100,13 @@ class CRDraw:
 if __name__ == "__main__":
     crd = CRDraw("ola", 1)
     crd.bufferOnOff(False)
-    points = [(0, 50), (400, 60), (50, 30), (700, 200)]
-    crd.drawPolygon(1, points, (0, 0, 255))
-    crd.drawLine2(2, (700, 200), (850, 250), (255, 0, 0))
-    crd.drawSquare(3, 20, 700, 200, (255, 255, 0))
-    crd.drawRectangle(4, 50, 20, 700, 200, (255, 0, 0))
+    #points = [(0, 50), (400, 60), (50, 30), (700, 200)]
+    #crd.drawPolygon(1, points, (0, 0, 255))
+    #crd.drawLine2(2, (700, 200), (850, 250), (255, 0, 0))
+    #crd.drawSquare(3, 20, 700, 200, (255, 255, 0))
+    #crd.drawRectangle(4, 50, 20, 700, 200, (255, 0, 0))
+    crd.setColor(255,0,0);
+    crd.drawText("1.4.5","olaaaaaaa", 10, 10, 20);
+    crd.setColor(0,255,0);
+    crd.drawText("1.4.6","lllllllllll", 100, 100);
     crd.drawAll()

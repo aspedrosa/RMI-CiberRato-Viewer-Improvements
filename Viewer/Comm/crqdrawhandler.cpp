@@ -67,8 +67,12 @@ bool CRQDrawHandler::startElement( const QString&, const QString&,
                 }
             } else if (tag == "Text") {
                 QString text = attr.value(QString("text"));
+                int font_size = attr.value(QString("font_size")).toInt();
+                const QString x = attr.value(QString("x"));
+                const QString y = attr.value(QString("y"));
                 if (!text.isNull()) {
-                    auto *quote = new Quote(*color, shape_id, text, ttl);
+                    auto *p = new Point(x.toDouble(), y.toDouble());
+                    auto *quote = new Quote(*color, shape_id, text, font_size, *p, ttl);
                     shapes.push_back(quote);
                 }
             } else if (tag == "Circle") {

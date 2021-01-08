@@ -10,7 +10,7 @@ public class Main {
         Color c = new Color();
         c.setColor(0,255,0);
         crDraw.drawCircle("1.loc.2",50,100,0,c);
-        crDraw.drawText("1.loc.3","text");
+        crDraw.drawText("1.loc.3","text", 600, 10);
         crDraw.drawRectangle("1.plan.1",50,50,100,200,10000);
         crDraw.drawSquare("1.plan.2",20,200,200);
         Point p1 = new Point(150,200);

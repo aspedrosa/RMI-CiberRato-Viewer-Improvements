@@ -64,8 +64,11 @@ private:
 
 class Quote : public Shape {
 public:
-    Quote(QColor &color, QString id, QString &text, unsigned int time) : Shape(color, id, time){
-        this->text;
+    Quote(QColor &color, QString id, QString &text, int font_size, Point &p, unsigned int time) : Shape(color, id, time){
+        this->text = text;
+        this->p = p;
+        this->font_size = font_size;
+
     }
     ~Quote() {
         delete &text;
@@ -75,8 +78,19 @@ public:
         return text;
     }
 
+    const Point &get_p() const {
+        return p;
+    }
+
+    const int get_font_size() const {
+        return font_size;
+    }
+
+
 private:
     QString text;
+    int font_size;
+    Point p;
 };
 
 class Line : public Shape {
