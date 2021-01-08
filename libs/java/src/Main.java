@@ -3,7 +3,8 @@ import java.io.IOException;
 public class Main {
 
     public static void main(String[] args) throws IOException {
-        CRDraw crDraw = new CRDraw(5000);
+        CRDraw crDraw = new CRDraw();
+        //crDraw.bufferOnOff(false);
         crDraw.setColor(255,0,0);
         crDraw.drawEllipse("1.loc.1",50,20,0,0);
         Color c = new Color();
@@ -24,5 +25,6 @@ public class Main {
         crDraw.drawPolygon("1.plan.3",point_list);
         crDraw.drawLine("1.plan.4",450,100,450,150);
         crDraw.drawLine2("1.yo.1",p1,p4,15000);
+        crDraw.drawAll();
     }
 }

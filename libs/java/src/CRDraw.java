@@ -14,7 +14,7 @@ class Color{
 
     @Override
     public String toString(){
-        return "r=\"" + r + "\" g=\""+ g +"\"" + "b=\""+ b + "\"";
+        return "red=\"" + r + "\" green=\""+ g +"\"" + " blue=\""+ b + "\"";
     }
 }
 
@@ -39,7 +39,7 @@ class Point {
 
 public class CRDraw {
 
-    public static final String DEFAULT_HOST = "0.0.0.0";
+    public static final String DEFAULT_HOST = "localhost";
     public static final int DEFAULT_PORT = 5000;
     public static final int DEFAULT_TTL = 5000;
 
@@ -88,14 +88,16 @@ public class CRDraw {
     }
 
     void bufferOnOff(boolean on_off){
-        buffered = true;
+        buffered = on_off;
     }
     void setColor(int r, int g, int b){
         color.setColor(r,g,b);
     }
     void drawAll() throws IOException {
-        sendMessage(buffer.toString());
-        buffer.setLength(0);
+        if (buffered) {
+            sendMessage(buffer.toString());
+            buffer.setLength(0);
+        }
     }
 
     void drawEllipse(String id, double diam_vertical, double diam_horizontal, double x, double y) throws IOException {
@@ -140,7 +142,7 @@ public class CRDraw {
         drawText(id,text,color, time_to_live);
     }
     void drawText(String id, String text, Color color, int time_to_live) throws IOException {
-        String msg = "<Text ttl=\""+time_to_live+"\" id=\""+id+"\" "+color.toString()+"text=\""+text+"\"></Text>";
+        String msg = "<Text ttl=\""+time_to_live+"\" id=\""+id+"\" "+color.toString()+" text=\""+text+"\"></Text>";
         if(buffered){
             buffer.append(msg);
         }
@@ -191,7 +193,7 @@ public class CRDraw {
         drawPolygon(id,point_list,color,time_to_live);
     }
     void drawPolygon(String id, Point[] point_list, Color color, int time_to_live) throws IOException {
-        StringBuilder msg_builder = new StringBuilder("<Polygon id=\""+id+"\"ttl=\""+time_to_live+"\" "+color+">");
+        StringBuilder msg_builder = new StringBuilder("<Polygon id=\""+id+"\" ttl=\""+time_to_live+"\" "+color+">");
         for (Point point : point_list) {
             msg_builder.append(point.toString());
         }
@@ -215,7 +217,7 @@ public class CRDraw {
     }
     void drawLine(String id, double x0, double y0, double x1, double y1, Color color, int time_to_live) throws IOException {
         String msg = String.format(
-                "<Line ttl=\"%d\" \"id=\"%s\" %s x0=\"%f\" y0=\"%f\" x1=\"%f\" y1=\"%f\"></Line>",
+                "<Line ttl=\"%d\" id=\"%s\" %s x0=\"%f\" y0=\"%f\" x1=\"%f\" y1=\"%f\"></Line>",
                 time_to_live, id, color,
                 x0, y0, x1, y1);
         if(buffered){
@@ -236,7 +238,7 @@ public class CRDraw {
         drawLine2(id, p0, p1, color, time_to_live);
     }
     void drawLine2(String id, Point p0, Point p1, Color color, int time_to_live) throws IOException {
-        String msg = String.format("<Line ttl=\"%d\" \"id=\"%s\" %s %s %s></Line>", time_to_live, id, color, p0.toStringIndex(0), p1.toStringIndex(1));
+        String msg = String.format("<Line ttl=\"%d\" id=\"%s\" %s %s %s></Line>", time_to_live, id, color, p0.toStringIndex(0), p1.toStringIndex(1));
         if(buffered){
             buffer.append(msg);
         }
