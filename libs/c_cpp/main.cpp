@@ -21,7 +21,7 @@ int main(int argc, char **argv) {
 
     drawEllipse("5.loc.4", 50, 25, 100, 200, nullptr, -1);
     drawCircle("5.loc.3", 50, 100, 300, nullptr, -1);
-    drawText("5.loc.2", "ola", nullptr, -1);
+    drawText("5.loc.2", "ola", 25, 250, 20, nullptr, -1);
     Color c = {0, 255, 0};
     drawRectangle("5.loc.1", 50, 10, 400, 200, &c, -1);
     drawSquare("5.loc.5", 10, 300, 200, nullptr, -1);

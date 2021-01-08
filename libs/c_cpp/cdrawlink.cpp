@@ -71,7 +71,7 @@ void CDrawLink::drawEllipse(char *id, double diam_vertical, double diam_horizont
     }
 }
 
-void CDrawLink::drawText(char *id, int font_size, char *text, double x, double y, Color *color, int time_to_live){
+void CDrawLink::drawText(char *id, char *text, double x, double y, int font_size, Color *color, int time_to_live){
     int r,g,b;
     if(color == nullptr){
         r = this->color.r;

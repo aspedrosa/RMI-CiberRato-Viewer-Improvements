@@ -18,7 +18,7 @@ void setColor(int r, int g, int b);
 void drawAll();
 void drawEllipse(char *id, double diam_vertical, double diam_horizontal, double x, double y, Color *color, int time_to_live);
 void drawCircle(char *id, double diam, double x, double y, Color *color, int time_to_live);
-void drawText(char *id, char *text, Color *color, int time_to_live);
+void drawText(char *id, char *text, double x, double y, int fontSize, Color *color, int time_to_live);
 void drawRectangle(char *id, double width, double height, double x, double y, Color *color, int time_to_live);
 void drawSquare(char *id, double width, double x, double y, Color *color, int time_to_live);
 void drawPolygon(char *id, int num_of_points, Point *point_list, Color *color, int time_to_live);

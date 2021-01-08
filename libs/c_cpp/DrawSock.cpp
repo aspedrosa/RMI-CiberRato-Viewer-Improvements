@@ -45,8 +45,8 @@ void drawCircle(char *id, double diam, double x, double y, Color *color=nullptr,
     link->drawCircle(id, diam, x, y, color, time_to_live);
 }
 
-void drawText(char *id, char *text, Color *color=nullptr, int time_to_live=-1){
-    link->drawText(id, text, color,time_to_live);
+void drawText(char *id, char *text, double x, double y, int fontSize=14, Color *color=nullptr, int time_to_live=-1){
+    link->drawText(id, text, x, y, fontSize, color,time_to_live);
 }
 
 void drawRectangle(char *id, double width, double height, double x, double y, Color *color=nullptr, int time_to_live=-1){
