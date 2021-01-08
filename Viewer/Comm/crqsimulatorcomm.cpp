@@ -54,7 +54,7 @@ CRQSimulatorComm::CRQSimulatorComm()
 
 CRQSimulatorComm::CRQSimulatorComm(CRQLabView *lb, CRQScene *commScene, CRLab *commLab,
                                    QString h, unsigned short port_, const char c , const char autoC,
-                                   const char autoS, bool enable_tree)
+                                   const char autoS, int draw_port, bool enable_tree)
     : QUdpSocket(), timer(this)
 {
     scoreLayout = lb->findChild<QVBoxLayout *>("scoreLayout");
@@ -69,7 +69,9 @@ CRQSimulatorComm::CRQSimulatorComm(CRQLabView *lb, CRQScene *commScene, CRLab *c
 	host = h;
 	skinFName = lb->getSkin();
     isConnected = false;
+
     this->enable_tree = enable_tree;
+    this->draw_port = draw_port;
 
     QObject::connect (this, SIGNAL(readyRead()), SLOT(dataControler()));
 
@@ -287,6 +289,9 @@ void CRQSimulatorComm::dataControler() //Called when the socket receive somethin
                     dataView->show();
                     if(!enable_tree) {
                         dataView->deleteTreeWidget();
+                    }
+                    else if (robotComm == NULL){
+                        robotComm = new CRQRobotComm(scene, draw_port, &dataView);
                     }
                     // the control window - not supported / no need
                     /*commControlPanel = new CRQControlPanel( scene, this,

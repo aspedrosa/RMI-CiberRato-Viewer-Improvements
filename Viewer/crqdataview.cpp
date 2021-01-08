@@ -158,11 +158,8 @@ void CRQDataView::removeItem(QString item) {
     for(i=0; i<item_splitted.length(); i++){
         subLevelItem = topLevelItem;
         topLevelItem = subLevelItem->parent();
-        if (subLevelItem->childCount() == 0) {
-            ui->treeWidget->removeItemWidget(subLevelItem, 0);
+        if (topLevelItem == NULL || topLevelItem->childCount() > 1) {
             delete subLevelItem;
-        }
-        else {
             break;
         }
     }

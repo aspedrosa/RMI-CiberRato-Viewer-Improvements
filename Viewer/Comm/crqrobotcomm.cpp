@@ -60,7 +60,9 @@ long getCurrentTime(){
                 QGraphicsItem* item = first->second.item;
                 if (ShapesDrawn->count(id) > 0 && ShapesDrawn->at(id) == item) {  // TODO find()
                     scene->removeItem(item);
-                    (*data_view)->removeItem(id);
+                    if ((*data_view) != NULL) {
+                        (*data_view)->removeItem(id);
+                    }
                     ShapesDrawn->erase(id);
                 }
                 ttd->erase(first->first);
@@ -68,7 +70,11 @@ long getCurrentTime(){
 
             if (!ttd->empty()) {
                 now = getCurrentTime();
-                shapes_ttl->wait_for(lock, chrono::microseconds(ttd->begin()->first- now));
+                long sleep_time = ttd->begin()->first - now;
+                if (sleep_time <= 0) {
+                    continue;
+                }
+                shapes_ttl->wait_for(lock, chrono::microseconds(sleep_time));
             }
         }
     }

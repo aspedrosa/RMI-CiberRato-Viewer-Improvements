@@ -81,8 +81,6 @@ private:
      */
     CRQSimulatorComm *simulator_comm;
 
-    CRQRobotComm *robot_comm;
-
     QString skinFileName;
 
     CRMainParameters *param;

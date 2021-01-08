@@ -71,7 +71,7 @@ public:
 
     }
     ~Quote() {
-        delete &text;
+        delete &text, &p;
     }
 
     const QString &get_text() const {

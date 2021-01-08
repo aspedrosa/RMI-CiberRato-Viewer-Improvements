@@ -45,6 +45,7 @@
 #include <QtGui>
 
 class CRQLabView;
+class CRQRobotComm;
 
 class CRQSimulatorComm : public QUdpSocket
 {
@@ -58,7 +59,7 @@ public:
 	 */
     CRQSimulatorComm(CRQLabView *lb, CRQScene *commScene, CRLab *commLab,
                      QString host, unsigned short port, const char c, const char autoC,
-                     const char autoS, bool enable_tree);
+                     const char autoS, int draw_port, bool enable_tree);
 	/*! This is the destructor.
 	 */
 	~CRQSimulatorComm();
@@ -125,7 +126,10 @@ private:
     QString skinFName;
     QVBoxLayout *scoreLayout;
     bool isConnected;
+
     bool enable_tree;
+    int draw_port;
+    CRQRobotComm *robotComm = NULL;
 };
 
 
