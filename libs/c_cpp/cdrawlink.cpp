@@ -1,7 +1,3 @@
-//
-// Created by aspedrosa on 1/7/21.
-//
-
 #include "cdrawlink.h"
 
 #include <iostream>
