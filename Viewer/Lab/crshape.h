@@ -189,18 +189,26 @@ class Polygon : public Shape {
 public:
     Polygon(QColor &color, QString id, QVector<QPointF> &points, unsigned int time) : Shape(color, id, time){
         this->points = points;
-
+        applyied_labSize_y = false;
     }
     ~Polygon(){
         delete &points;
     }
 
-    const QVector<QPointF> &get_points() const {
+    const QVector<QPointF> &get_points(double labSize_y) {
+        if (!applyied_labSize_y) {
+            for (auto &point : points) {
+                point.setY(ZOOM * labSize_y - point.y() * ZOOM);
+                point.setX(point.x() * ZOOM);
+            }
+            applyied_labSize_y = true;
+        }
         return points;
     }
 
 private:
     QVector<QPointF> points;
+    bool applyied_labSize_y;
 };
 
 /**

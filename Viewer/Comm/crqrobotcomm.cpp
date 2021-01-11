@@ -223,7 +223,7 @@ void CRQRobotComm::dataControler() //Called when the socket receive something
                             text->setDefaultTextColor(shape->get_color());
                         } else if (dynamic_cast<Polygon*>(shape)){
                             auto *polygon = (Polygon*) shape;
-                            item = new QGraphicsPolygonItem(polygon->get_points(), 0);
+                            item = new QGraphicsPolygonItem(polygon->get_points(scene->lab->labSize().y()), 0);
                         }
 
                         if (dynamic_cast<QAbstractGraphicsShapeItem*>(item)) {
