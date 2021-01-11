@@ -74,8 +74,8 @@ public:
 	/* Server port to receive messages from agents */
     unsigned short agent_port;
 
-    /* Listen to agent messages */
-    char agent_viewer;
+    /* Listen to agent drawing messages */
+    char agent_drawer;
 
 };
 #endif

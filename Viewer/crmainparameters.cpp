@@ -31,7 +31,7 @@ CRMainParameters::CRMainParameters()
 	control = 'y';
 	autoStart = 'n';
     agent_port = 5000;
-	agent_viewer = 'y';
+	agent_drawer = 'y';
 }
 
 CRMainParameters::~CRMainParameters()

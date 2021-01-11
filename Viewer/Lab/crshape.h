@@ -10,8 +10,15 @@
 #include <QPointF>
 #include <QVector>
 
+/**
+ * Used to translate robot coordinates to scene coordinates
+ */
 #define ZOOM 34
 
+/**
+ * Point class used by other shape classes
+ *  to define point on the scene
+ */
 class Point {
 public:
     Point() {
@@ -23,10 +30,23 @@ public:
         this->y = y * ZOOM;
     }
 
+    /**
+     * Gets the x coordinate on the scene coordinate space
+     *
+     * @return x coordinate converted to the scene coordinates space
+     */
     double get_x() const {
         return x;
     }
 
+    /**
+     * Gets the y coordinate on the scene coordinate space.
+     * This extra calculation is needed because the robot coordinate
+     *  space and scene coordinate space have a different 0,0.
+     *
+     * @param labSize_y size of the scene used to convert to the scene coordinates space
+     * @return y coordinate converted to the scene coordinates space
+     */
     double get_y(double labSize_y) const {
         return ZOOM * labSize_y - y;
     }
@@ -35,12 +55,15 @@ private:
     double x, y;
 };
 
+/**
+ * Base Shape class
+ */
 class Shape {
 public:
-    Shape(QColor &color, QString id, unsigned int time) {
+    Shape(QColor &color, QString id, unsigned int ttl) {
         this->color = color;
         this->id = id;
-        this->ttl = time;
+        this->ttl = ttl;
     }
     virtual ~Shape() {
         delete &color;
@@ -64,6 +87,9 @@ private:
     unsigned int ttl;
 };
 
+/**
+ * Class to represent a text in the scene
+ */
 class Quote : public Shape {
 public:
     Quote(QColor &color, QString id, QString &text, int font_size, Point &p, unsigned int time) : Shape(color, id, time){
@@ -95,6 +121,9 @@ private:
     Point p;
 };
 
+/**
+ * Class to represent a line in the scene
+ */
 class Line : public Shape {
 public:
     Line(QColor &color, QString id, Point &p_begin, Point &p_end, unsigned int time) : Shape (color, id, time) {
@@ -117,6 +146,9 @@ private:
     Point p_begin, p_end;
 };
 
+/**
+ * Class to represent a ellipse in the scene
+ */
 class Ellipse : public Shape {
 public:
     Ellipse(QColor &color, QString id, Point &p, double diam_vertical, double diam_horizontal, unsigned int time) : Shape(color, id, time) {
@@ -145,6 +177,9 @@ private:
     double diam_vertical, diam_horizontal;
 };
 
+/**
+ * Class to represent a circle in the scene
+ */
 class Circle : public Ellipse {
 public:
     Circle(QColor &color, QString id, Point &p, double diam, unsigned int time) : Ellipse(color, id, p, diam, diam, time) {}
@@ -168,6 +203,9 @@ private:
     QVector<QPointF> points;
 };
 
+/**
+ * Class to represent a rectangle in the scene
+ */
 class Rectangle : public Shape {
 public:
     Rectangle(QColor &color, QString id, Point &p, double width, double height, unsigned int time) : Shape(color, id, time){
@@ -197,6 +235,9 @@ private:
     double height;
 };
 
+/**
+ * Class to represent a Square in the scene
+ */
 class Square : public Rectangle {
 public:
     Square(QColor &color, QString id, Point &p, double width, unsigned int time) : Rectangle(color, id, p, width, width, time){}

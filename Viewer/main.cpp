@@ -35,7 +35,7 @@ using namespace std;
 void ParameterError( char *appName )
 {
     cerr << "\n\tInvalid parameters\n";
-	cerr << "\tTry `" << appName << " -help' for more information.\n\n";
+	cerr << "\tTry `" << appName << " --help' for more information.\n\n";
     exit(1);
 }
 
@@ -95,9 +95,9 @@ int main( int argc, char **argv )
 			i+=1;
             param->autoConnect = 'y';
         }
-        else if( strcmp(Visualizador.argv()[i], "--noagent") == 0 ){
+        else if( strcmp(Visualizador.argv()[i], "--nodraw") == 0 ){
             i+=1;
-            param->agent_viewer = 'n';
+            param->agent_drawer = 'n';
         }
         else if( strcmp(Visualizador.argv()[i], "--paramfile") == 0 )
         {
@@ -114,7 +114,7 @@ int main( int argc, char **argv )
 			cout << "                   [--highercolor color]\n";
 			cout << "                   [--paramfile file.xml]\n";
 			cout << "                   [--nocontrol]\n";
-            cout << "                   [--noagent]\n";
+            cout << "                   [--nodraw]\n";
 			cout << "                   [--autoconnect]\n";
 			cout << "                   [--autostart]\n";
 			cout << "                   [--help]\n";

@@ -29,6 +29,11 @@
 
 using namespace std;
 
+/**
+ * Auxiliary function to return the current time since epoch in microseconds
+ *
+ * @return current timestamp in microseconds
+ */
 long getCurrentTime(){
     auto now = std::chrono::system_clock::now();
     auto now_ms = std::chrono::time_point_cast<std::chrono::microseconds>(now);
@@ -38,6 +43,21 @@ long getCurrentTime(){
     return duration;
 }
 
+/**
+ * Thread in charge of deleting shapes after their time-to-live (ttl) time.
+ * Also, when the ttl reaches the end this thread will remove the respective
+ *  item from the TreeWidget
+ *
+ * @param m mutex to access shared structured with the main thread
+ * @param stop if this thread should exit
+ * @param ttd shared map of shapes ordered by their ttl
+ * @param ShapesDrawn shared map to get the shape's QGraphicsItem by its id
+ * @param shapes_ttl Condition where this thread sleeps:
+ *  -the smallest ttl of all shapes;
+ *  or
+ *  -until a new shape is drawn;
+ * @param data_view View holding the tree widget that displays the shapes filtering tree
+ */
 [[noreturn]] void ttl_checker(
         std::mutex *m,
         const bool *stop,
@@ -45,51 +65,56 @@ long getCurrentTime(){
         std::unordered_map<QString, QGraphicsItem*> *ShapesDrawn,
         QGraphicsScene *scene,
         std::condition_variable *shapes_ttl,
-        CRQDataView **data_view
+        CRQDataView *data_view
         ) {
 
     std::unique_lock<std::mutex> lock(*m);
-    while (!stop) {
+    while (!*stop) {
         if (ttd->empty()) {
-            shapes_ttl->wait(lock, [ttd]{return !ttd->empty();});
+            // wait until a new shape is added
+            shapes_ttl->wait(lock, [stop, ttd]{return *stop || !ttd->empty();});
         }
         else {
             long now = getCurrentTime();
-            auto first = ttd->begin();
-            if (now > first->first) {
-                QString id = first->second.id;
-                QGraphicsItem* item = first->second.item;
-                if (ShapesDrawn->count(id) > 0 && ShapesDrawn->at(id) == item) {  // TODO find()
+            auto smallest_ttl = ttd->begin();
+            if (now > smallest_ttl->first) {
+                QString id = smallest_ttl->second.id;
+                QGraphicsItem* item = smallest_ttl->second.item;
+                if (ShapesDrawn->count(id) > 0 && ShapesDrawn->at(id) == item) {
                     scene->removeItem(item);
-                    if ((*data_view) != NULL) {
-                        (*data_view)->removeItem(id);
-                    }
+                    data_view->removeItem(id);
                     ShapesDrawn->erase(id);
                 }
-                ttd->erase(first->first);
+                ttd->erase(smallest_ttl->first);
             }
 
-            if (!ttd->empty()) {
+            if (!ttd->empty()) {  // if there is still shapes still for the smallest ttl
                 now = getCurrentTime();
                 long sleep_time = ttd->begin()->first - now;
-                if (sleep_time <= 0) {
+                if (sleep_time <= 0) {  // skip if the smallest ttl expired
                     continue;
                 }
                 shapes_ttl->wait_for(lock, chrono::microseconds(sleep_time));
             }
         }
     }
+    lock.unlock();
 }
 
 /*============================================================================*/
 
-CRQRobotComm::CRQRobotComm(CRQScene *commScene, unsigned short port, CRQDataView **data_view): QUdpSocket() {
+CRQRobotComm::CRQRobotComm(CRQScene *commScene, unsigned short port, CRQDataView *data_view): QUdpSocket() {
     scene = commScene;	// Scene passed by main
     this->data_view = data_view;
-    filterTreeWidgetSignalConnected = false;
     stop = false;
 
     QObject::connect (this, SIGNAL(readyRead()), SLOT(dataControler()));
+
+    QObject::connect (
+        data_view->getFilterTreeWidget(),
+        SIGNAL(itemChanged(QTreeWidgetItem*, int)),
+        SLOT(filterItems(QTreeWidgetItem*, int))
+    );
 
     QHostAddress localAddress;
     localAddress.setAddress(QString( "0.0.0.0" ));
@@ -99,51 +124,52 @@ CRQRobotComm::CRQRobotComm(CRQScene *commScene, unsigned short port, CRQDataView
         exit (-1);
     }
 
-    new std::thread(ttl_checker, &m, &stop, &ttd, &ShapesDrawn, scene, &shapes_ttl, data_view);
+    ttl_checker_thread = new std::thread(ttl_checker, &m, &stop, &ttd, &ShapesDrawn, scene, &shapes_ttl, data_view);
 }
 
 /*============================================================================*/
 
 CRQRobotComm::~CRQRobotComm()
 {
+    // tell the ttl_checker thread to exit
     stop = true;
     shapes_ttl.notify_all();
 
-    std::lock_guard<std::mutex> lock(m);
+    ttl_checker_thread->join();
+
     QObject::disconnect(
-            (*data_view)->getFilterTreeWidget(),
+            data_view->getFilterTreeWidget(),
             SIGNAL(itemChanged(QTreeWidgetItem*, int)),
             this,
             SLOT(filterItems(QTreeWidgetItem*, int))
     );
-
-    ttd.clear();
-    for (auto &entry : ShapesDrawn) {
-        scene->removeItem(entry.second);
-    }
 }
 
 void CRQRobotComm::filterItems(QTreeWidgetItem *item, int _) {
     if(item->parent() != NULL && !item->parent()->checkState(0) && item->checkState(0)){
+        // if the parent of the current item is unchecked then this item should also be unchecked
         item->setCheckState(0, Qt::Unchecked);
         return;
     }
 
     QString item_id = item->text(0);
     QTreeWidgetItem* item_tmp = item->parent();
-    while(item_tmp != NULL) {
+    while(item_tmp != NULL) {  // go up in the filtering tree to build the shape's id
         item_id = item_tmp->text(0) + "." + item_id;
         item_tmp = item_tmp->parent();
     }
 
     for (int child_index = 0; child_index < item->childCount(); child_index++) {
+        // check this item's children if itself is checked
         item->child(child_index)->setCheckState(0, item->checkState(0) ? Qt::Checked : Qt::Unchecked);
+        // disable this item's children if itself is unchecked
         item->child(child_index)->setDisabled(!item->checkState(0));
     }
 
-    if (item->childCount() == 0 && this->ShapesDrawn.count(item_id) > 0) {
-        QGraphicsItem* shape_item = this->ShapesDrawn.at(item_id);
-        shape_item->setVisible(item->checkState(0));
+    auto graphics_item = ShapesDrawn.find(item_id);
+    if (item->childCount() == 0 && graphics_item != ShapesDrawn.end()) {
+        // apply the check state to the shape
+        graphics_item->second->setVisible(item->checkState(0));
     }
 }
 
@@ -177,18 +203,18 @@ void CRQRobotComm::dataControler() //Called when the socket receive something
                         QGraphicsItem *item;
                         if (dynamic_cast<Ellipse*>(shape)) {
                             auto *circle = (Ellipse*) shape;
-                            item = new QGraphicsEllipseItem(circle->get_p().get_x(), circle->get_p().get_y(scene->lab->labSize().y()), circle->get_diam_horizontal(), circle->get_diam_vertical(), 0, scene);
+                            item = new QGraphicsEllipseItem(circle->get_p().get_x(), circle->get_p().get_y(scene->lab->labSize().y()), circle->get_diam_horizontal(), circle->get_diam_vertical(), 0);
                         } else if (dynamic_cast<Rectangle*>(shape)) {
                             auto *rectangle = (Rectangle*) shape;
-                            item = new QGraphicsRectItem(rectangle->get_p().get_x(), rectangle->get_p().get_y(scene->lab->labSize().y()), rectangle->get_width(), rectangle->get_height(), 0, scene);
+                            item = new QGraphicsRectItem(rectangle->get_p().get_x(), rectangle->get_p().get_y(scene->lab->labSize().y()), rectangle->get_width(), rectangle->get_height(), 0);
                         } else if (dynamic_cast<Line*>(shape)) {
                             auto *line = (Line*) shape;
                             QGraphicsLineItem a;
 
-                            item = new QGraphicsLineItem(line->get_p_begin().get_x(), line->get_p_begin().get_y(scene->lab->labSize().y()), line->get_p_end().get_x(), line->get_p_end().get_y(scene->lab->labSize().y()), 0, scene);
+                            item = new QGraphicsLineItem(line->get_p_begin().get_x(), line->get_p_begin().get_y(scene->lab->labSize().y()), line->get_p_end().get_x(), line->get_p_end().get_y(scene->lab->labSize().y()), 0);
                         } else if (dynamic_cast<Quote*>(shape)) {
                             auto *quote = (Quote*) shape;
-                            item = new QGraphicsTextItem(quote->get_text(), 0, scene);
+                            item = new QGraphicsTextItem(quote->get_text(), 0);
                             QFont f;
                             f.setPixelSize(quote->get_font_size());
                             auto *text = (QGraphicsTextItem*) item;
@@ -197,7 +223,7 @@ void CRQRobotComm::dataControler() //Called when the socket receive something
                             text->setDefaultTextColor(shape->get_color());
                         } else if (dynamic_cast<Polygon*>(shape)){
                             auto *polygon = (Polygon*) shape;
-                            item = new QGraphicsPolygonItem(polygon->get_points(), 0, scene);
+                            item = new QGraphicsPolygonItem(polygon->get_points(), 0);
                         }
 
                         if (dynamic_cast<QAbstractGraphicsShapeItem*>(item)) {
@@ -208,35 +234,23 @@ void CRQRobotComm::dataControler() //Called when the socket receive something
                             auto *line_item = (QGraphicsLineItem*) item;
                             line_item->setPen(QPen(shape->get_color()));
                         }
-                        item->setVisible((*data_view)->isItemChecked(shape->getId()));
+                        item->setVisible(data_view->isItemChecked(shape->getId()));
                         item->setZValue(8);
                         item->setOpacity(1);
 
                         {
                             std::lock_guard<std::mutex> lock(m);
-                            bool notify = false;
-                            if (ttd.empty() || ttd.begin()->first > getCurrentTime() + shape->getTTL()) {
-                                notify = true;
-                            }
+                            bool notify = ttd.empty() || ttd.begin()->first > getCurrentTime() + shape->getTTL() * 1000;
                             if (ShapesDrawn.count(shape->getId()) == 1) {
                                 scene->removeItem(ShapesDrawn[shape->getId()]);
                             }
                             ShapesDrawn[shape->getId()] = item;
                             ttd[getCurrentTime() + shape->getTTL() * 1000] = {item, shape->getId()};
-                            if (*data_view != NULL) {
-                                if (!filterTreeWidgetSignalConnected) {
-                                    QObject::connect (
-                                            (*data_view)->getFilterTreeWidget(),
-                                            SIGNAL(itemChanged(QTreeWidgetItem*, int)),
-                                            SLOT(filterItems(QTreeWidgetItem*, int))
-                                            );
-                                    filterTreeWidgetSignalConnected = true;
-                                }
-                                (*data_view)->addItem(shape->getId());
-                            }
+                            data_view->addItem(shape->getId());
                             if (notify) {
                                 shapes_ttl.notify_all();
                             }
+                            scene->addItem(item);
                         }
                     }
                     break;

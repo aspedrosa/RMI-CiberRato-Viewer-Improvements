@@ -93,7 +93,7 @@ bool CRQDataView::isItemChecked(QString &item) {
     QTreeWidgetItem *topLevelItem = NULL;
     QTreeWidgetItem *subLevelItem = NULL;
     for(int i=0; i<item_splitted.length(); i++){
-        if(i==0){
+        if(i==0){  // get the most top level item for this id
             auto item_list = ui->treeWidget->findItems(item_splitted[i], Qt::MatchExactly);
             if(item_list.length() > 0){
                 topLevelItem = item_list[0];
@@ -103,10 +103,11 @@ bool CRQDataView::isItemChecked(QString &item) {
             }
         }
         else{
-            auto item_list = ui->treeWidget->findItems(item_splitted[i], Qt::MatchExactly | Qt::MatchRecursive);
+            // get subsequent child according to the received id
+            auto item_list = ui->treeWidget->findItems(item_splitted[i], Qt::MatchExactly | Qt::MatchRecursive);  // get all items that have the text equal to item_splitted[i]
             if(item_list.length() > 0){
                 for(auto & j : item_list){
-                    if(j->parent() == topLevelItem){
+                    if(j->parent() == topLevelItem){  // the one we are searching needs to have as parent, the item we found on the previous loop
                         subLevelItem = j;
                         break;
                     }

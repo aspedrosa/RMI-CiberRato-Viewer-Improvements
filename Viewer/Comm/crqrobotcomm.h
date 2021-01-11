@@ -19,6 +19,7 @@
 #include <unordered_map>
 #include <chrono>
 #include <mutex>
+#include <thread>
 #include <condition_variable>
 #include <QUdpSocket>
 #include <QHostAddress>
@@ -58,11 +59,10 @@ class CRQRobotComm : public QUdpSocket
 public:
     /*!	This is the constructor.
      *	\param commScene the scene this class will work with.
-     *	\param commLab the lab this class will work with.
-     *	\param host the address of simulator.
-     *	\param port the port of simulator.
+     *	\param port the port to listen to drawing messages.
+     *	\param data_view View holding the tree widget that displays the shapes filtering tree
      */
-    CRQRobotComm(CRQScene *commScene, unsigned short port, CRQDataView **data_view);
+    CRQRobotComm(CRQScene *commScene, unsigned short port, CRQDataView *data_view);
     /*! This is the destructor.
      */
     ~CRQRobotComm();
@@ -71,7 +71,14 @@ public slots:
     /*! Function called by the notifier to process the received information.
      */
     void dataControler();
-    void filterItems(QTreeWidgetItem*, int);
+
+    /**
+     * Slot to execute when a item is checked on the TreeWidget that filters shapes
+     *
+     * @param item the item checked
+     * @param column parameter ignored
+     */
+    void filterItems(QTreeWidgetItem* item, int column);
 
 private:
     std::mutex m;
@@ -79,8 +86,8 @@ private:
     CRQScene *scene;			//Scene
     std::map<long, shape_info> ttd;
     std::unordered_map<QString, QGraphicsItem*> ShapesDrawn;
-    CRQDataView **data_view;
-    bool filterTreeWidgetSignalConnected;
+    CRQDataView *data_view;
+    std::thread *ttl_checker_thread;
     bool stop;
 };
 

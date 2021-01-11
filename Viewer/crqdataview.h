@@ -68,6 +68,15 @@ public:
 
     void deleteTreeWidget();
 
+    /**
+     * Checks if the item with id equal to the one received by
+     *  argument is checked.
+     * Method used by robotcomm to put a new graphic item with a visible
+     *  state equal to the associated QTreeWidgetItem.
+     *
+     * @param item id of the item, ex: robot1.localization.1
+     * @return check state
+     */
     bool isItemChecked(QString &item);
 
 signals:

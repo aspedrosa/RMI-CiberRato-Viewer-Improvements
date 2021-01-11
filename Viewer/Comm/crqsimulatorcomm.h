@@ -56,6 +56,11 @@ public:
 	 *	\param commLab the lab this class will work with.
 	 *	\param host the address of simulator.
 	 *	\param port the port of simulator.
+	 *	\param c Aparecimento ou nao da janela de controlo (not supported / no need)
+	 *	\param autoC connect to the simulator after startup
+	 *	\param autoS start the simulation after startup
+	 *	\param draw_port port to listen to drawing messages
+	 *	\param enable_tree if the user wants drawings from the agents
 	 */
     CRQSimulatorComm(CRQLabView *lb, CRQScene *commScene, CRLab *commLab,
                      QString host, unsigned short port, const char c, const char autoC,

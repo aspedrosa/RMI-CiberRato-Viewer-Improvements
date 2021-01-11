@@ -1,6 +1,6 @@
 TEMPLATE = app
-CONFIG   += qt warn_off release thread
-#CONFIG   += qt warn_on debug thread
+#CONFIG   += qt warn_off release thread
+CONFIG   += qt warn_on debug thread
 DEPENDPATH += Lab
 
 #DEFINES += DEBUG
