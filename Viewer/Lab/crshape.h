@@ -153,8 +153,8 @@ class Ellipse : public Shape {
 public:
     Ellipse(QColor &color, QString id, Point &p, double diam_vertical, double diam_horizontal, unsigned int time) : Shape(color, id, time) {
         this->p = p;
-        this->diam_vertical = diam_vertical;
-        this->diam_horizontal = diam_horizontal;
+        this->diam_vertical = diam_vertical * ZOOM;
+        this->diam_horizontal = diam_horizontal * ZOOM;
     }
     ~Ellipse() {
         delete &p;
@@ -218,8 +218,8 @@ class Rectangle : public Shape {
 public:
     Rectangle(QColor &color, QString id, Point &p, double width, double height, unsigned int time) : Shape(color, id, time){
         this-> p = p;
-        this->width = width;
-        this-> height = height;
+        this->width = width * ZOOM;
+        this-> height = height * ZOOM;
     }
     ~Rectangle(){
         delete &p;

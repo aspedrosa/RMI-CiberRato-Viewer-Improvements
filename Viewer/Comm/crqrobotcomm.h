@@ -81,12 +81,24 @@ public slots:
     void filterItems(QTreeWidgetItem* item, int column);
 
 private:
+    /**
+     * To ensure mutual exclusion
+     */
     std::mutex m;
     std::condition_variable shapes_ttl;
     CRQScene *scene;			//Scene
+    /**
+     * \var Map for delete shapes after the time to live.
+     */
     std::map<long, shape_info> ttd;
+    /**
+     * \var Map to save all the shapes that are currently drawn.
+     */
     std::unordered_map<QString, QGraphicsItem*> ShapesDrawn;
-    CRQDataView *data_view;
+    CRQDataView *data_view; //Data view
+    /**
+     * \var Thread for deleting shapes after the corresponding time to live.
+     */
     std::thread *ttl_checker_thread;
     bool stop;
 };

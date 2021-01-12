@@ -1,4 +1,4 @@
-
+//eu
 #ifndef VIEWER_CRQDRAWHANDLER_H
 #define VIEWER_CRQDRAWHANDLER_H
 
@@ -31,7 +31,7 @@ public:
     /*! \enum Type
      *  This enum type represent the object received.
      */
-    enum Type {UNKNOWN, SHAPES, POINT, INTERNAL_KNOWLEDGE};  // TODO check LIST, PATH
+    enum Type {UNKNOWN, SHAPES, POINT};
     /*! This function will be called in the begining of the XML document.
      */
     bool startDocument();
@@ -55,17 +55,38 @@ public:
      */
     Type objectType();
 
+    /*!
+     * Get the shapes that need to be drawn.
+     * @return The vector of objects that represent shapes.
+     */
     vector<Shape*>& get_shapes() {
         return this->shapes;
     }
 
 private:
-
+    /*!
+     * \var Type of message.
+     */
     Type type;
+    /*!
+     * \var Vector of shapes.
+     */
     vector<Shape*> shapes;
+    /*!
+     * \var Shape color.
+     */
     QColor *color;
+    /*!
+     * \var Identifier for the shape.
+     */
     QString shape_id;
+    /*!
+     * \var Time to live for the shape.
+     */
     unsigned int ttl;
+    /*!
+     * Vector of points for the polygon.
+     */
     QVector<QPointF> *polygon_points;
 };
 

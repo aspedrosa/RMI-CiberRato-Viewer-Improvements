@@ -130,6 +130,7 @@ void CRQDataView::addItem(QString &item){
     QTreeWidgetItem *topLevelItem = NULL;
     QTreeWidgetItem *subLevelItem = NULL;
     for(int i=0; i<item_splitted.length(); i++){
+        //Get the top level QTreeWidgetItem if exists, else creates it
         if(i==0){
             auto item_list = ui->treeWidget->findItems(item_splitted[i], Qt::MatchExactly);
             if(item_list.length() > 0){
@@ -144,7 +145,9 @@ void CRQDataView::addItem(QString &item){
                 ui->treeWidget->addTopLevelItem(topLevelItem);
             }
         }
+        //Iterate to create all a child QTreeWidgetItem to the corresponding parent
         else{
+            //Iterates
             auto item_list = ui->treeWidget->findItems(item_splitted[i], Qt::MatchExactly | Qt::MatchRecursive);
             if(item_list.length() > 0){
                 for(auto & j : item_list){
@@ -154,6 +157,7 @@ void CRQDataView::addItem(QString &item){
                     }
                 }
             }
+            //Creates a new QTreeWidgetItem
             if(subLevelItem == NULL){
                 subLevelItem = new QTreeWidgetItem(topLevelItem);
                 subLevelItem->setText(0,item_splitted[i]);  // Set text for item
@@ -173,10 +177,12 @@ void CRQDataView::removeItem(QString &item) {
     QTreeWidgetItem *subLevelItem = NULL;
     int i;
     for(i=0; i<item_splitted.length(); i++){
+        //Gets the top level QTreeWidgetItem
         if(i==0){
             auto item_list = ui->treeWidget->findItems(item_splitted[i], Qt::MatchExactly);
             topLevelItem = item_list[0];
         }
+        //Iterates to the last QTreeWidgetItem
         else{
             auto item_list = ui->treeWidget->findItems(item_splitted[i], Qt::MatchExactly | Qt::MatchRecursive);
             if(item_list.length() > 0){
@@ -192,6 +198,7 @@ void CRQDataView::removeItem(QString &item) {
         }
     }
 
+    //Removes the QTreeWidgetItem and the parents if needed (no more children in the QTreeWidget)
     for(i=0; i<item_splitted.length(); i++){
         subLevelItem = topLevelItem;
         topLevelItem = subLevelItem->parent();

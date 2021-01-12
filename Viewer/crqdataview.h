@@ -60,12 +60,27 @@ public:
      */
     void skin(QString skinFileName);
 
+    /*!
+     * Function to add an QTreeWidgetItem to the QTreeWidget.
+     * @param String that represents the QTreeWidgetItem to add.
+     */
     void addItem(QString &item);
 
+    /*!
+     * Function to remove an QTreeWidgetItem from the QTreeWidget.
+     * @param String that represents the QTreeWidgetItem to remove.
+     */
     void removeItem(QString &item);
 
+    /*!
+     * Get the QTreeWidget to be accessed on robotcomm file.
+     * @return UI QTreeWidget.
+     */
     QTreeWidget* getFilterTreeWidget();
 
+    /*!
+     * Delete the QTreeWidget from the UI.
+     */
     void deleteTreeWidget();
 
     /**

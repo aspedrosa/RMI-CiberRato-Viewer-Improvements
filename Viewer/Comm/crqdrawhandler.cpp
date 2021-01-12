@@ -1,4 +1,4 @@
-
+//eu
 #include "crqdrawhandler.h"
 #include <iostream>
 #include <QString>
@@ -26,15 +26,13 @@ bool CRQDrawHandler::startElement( const QString&, const QString&,
 
     switch (type) 	//Type defined in .h as enum.
     {
-        // <Ellipse diam="3" x="3"></Ellipse>
         case UNKNOWN:
             if (tag == "Shapes") {
                 type = SHAPES;
-            } else if (tag == "InternalKnowledge") {
-                type = INTERNAL_KNOWLEDGE;
             }
             break;
-        case SHAPES: {
+        case SHAPES: { //If the message contains shapes
+            //Get shape color from the xml message
             const QString red_color = attr.value(QString("red"));
             const QString green_color = attr.value(QString("green"));
             const QString blue_color = attr.value(QString("blue"));
@@ -45,8 +43,10 @@ bool CRQDrawHandler::startElement( const QString&, const QString&,
                 color = new QColor(red_color.toInt(), green_color.toInt(), blue_color.toInt());
             }
 
+            //Get shape identifier from the xml message
             shape_id = attr.value(QString("id"));
 
+            //Get shape time to live from the xml message
             QString ttl_string = attr.value(QString("ttl"));
             if (ttl_string.isNull()) {
                 ttl = DEFAULT_SHAPE_TTL;
@@ -54,7 +54,7 @@ bool CRQDrawHandler::startElement( const QString&, const QString&,
             else {
                 ttl = ttl_string.toUInt();
             }
-
+            //Get all the fields to draw an ellipse and add it to shapes vector.
             if (tag == "Ellipse") {
                 const QString diam_vertical = attr.value(QString("Diam_vertical"));
                 const QString diam_horizontal = attr.value(QString("Diam_horizontal"));
@@ -65,6 +65,7 @@ bool CRQDrawHandler::startElement( const QString&, const QString&,
                     auto *ellipse = new Ellipse(*color, shape_id, *p, diam_vertical.toDouble(), diam_horizontal.toDouble(), ttl);
                     shapes.push_back(ellipse);
                 }
+            //Get all the fields to draw text and add it to shapes vector.
             } else if (tag == "Text") {
                 QString text = attr.value(QString("text"));
                 int font_size = attr.value(QString("font_size")).toInt();
@@ -75,6 +76,7 @@ bool CRQDrawHandler::startElement( const QString&, const QString&,
                     auto *quote = new Quote(*color, shape_id, text, font_size, *p, ttl);
                     shapes.push_back(quote);
                 }
+            //Get all the fields to draw a circle and add it to shapes vector.
             } else if (tag == "Circle") {
                 const QString diam = attr.value(QString("Diam"));
                 const QString x = attr.value(QString("x"));
@@ -84,6 +86,7 @@ bool CRQDrawHandler::startElement( const QString&, const QString&,
                     auto *circle = new Circle(*color, shape_id, *p, diam.toDouble(), ttl);
                     shapes.push_back(circle);
                 }
+            //Get all the fields to draw a rectangle and add it to shapes vector.
             } else if (tag == "Rectangle") {
                 const QString width = attr.value(QString("Width"));
                 const QString height = attr.value(QString("Height"));
@@ -94,7 +97,8 @@ bool CRQDrawHandler::startElement( const QString&, const QString&,
                     auto *rectangle = new Rectangle(*color, shape_id, *p, width.toDouble(), height.toDouble(), ttl);
                     shapes.push_back(rectangle);
                 }
-            } else if (tag == "Square") { {
+            //Get all the fields to draw a square and add it to shapes vector.
+            } else if (tag == "Square") {
                 const QString width = attr.value(QString("Width"));
                 const QString x = attr.value(QString("x"));
                 const QString y = attr.value(QString("y"));
@@ -103,10 +107,11 @@ bool CRQDrawHandler::startElement( const QString&, const QString&,
                     auto *square = new Square(*color, shape_id, *p, width.toDouble(), ttl);
                     shapes.push_back(square);
                 }
-                }
+            //Move the type to get all the polygon points
             } else if (tag == "Polygon") {
                 type = POINT;
                 polygon_points = new QVector<QPointF>();
+            //Get all the fields to draw a line and add it to shapes vector.
             } else if (tag == "Line") {
                 const QString x0 = attr.value(QString("x0"));
                 const QString y0 = attr.value(QString("y0"));
@@ -120,6 +125,7 @@ bool CRQDrawHandler::startElement( const QString&, const QString&,
                 }
             } }
             break;
+        //Get all the polygon points
         case POINT: {
             const QString x = attr.value(QString("x"));
             const QString y = attr.value(QString("y"));
@@ -129,8 +135,6 @@ bool CRQDrawHandler::startElement( const QString&, const QString&,
             }
             polygon_points->push_back(*point);
         }
-            break;
-        case INTERNAL_KNOWLEDGE:
             break;
     }
 
@@ -150,6 +154,7 @@ QString& qName)
         case UNKNOWN:
             break;
         case POINT:
+            //Add the polygon to the shapes vector.
             if(tag == "Polygon") {
                 auto *polygon = new Polygon(*color, shape_id, *polygon_points, ttl);
                 shapes.push_back(polygon);

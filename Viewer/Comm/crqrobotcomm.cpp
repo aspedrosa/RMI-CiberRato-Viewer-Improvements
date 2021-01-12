@@ -124,6 +124,7 @@ CRQRobotComm::CRQRobotComm(CRQScene *commScene, unsigned short port, CRQDataView
         exit (-1);
     }
 
+    //Creates the thread
     ttl_checker_thread = new std::thread(ttl_checker, &m, &stop, &ttd, &ShapesDrawn, scene, &shapes_ttl, data_view);
 }
 
@@ -200,6 +201,7 @@ void CRQRobotComm::dataControler() //Called when the socket receive something
             switch (objectReceived) {
                 case CRQDrawHandler::SHAPES:
                     for (auto *shape: drawHandler.get_shapes()) {
+                        //Draw the corresponding shape depending on his subclass
                         QGraphicsItem *item;
                         if (dynamic_cast<Ellipse*>(shape)) {
                             auto *circle = (Ellipse*) shape;
@@ -210,7 +212,6 @@ void CRQRobotComm::dataControler() //Called when the socket receive something
                         } else if (dynamic_cast<Line*>(shape)) {
                             auto *line = (Line*) shape;
                             QGraphicsLineItem a;
-
                             item = new QGraphicsLineItem(line->get_p_begin().get_x(), line->get_p_begin().get_y(scene->lab->labSize().y()), line->get_p_end().get_x(), line->get_p_end().get_y(scene->lab->labSize().y()), 0);
                         } else if (dynamic_cast<Quote*>(shape)) {
                             auto *quote = (Quote*) shape;
@@ -225,15 +226,17 @@ void CRQRobotComm::dataControler() //Called when the socket receive something
                             auto *polygon = (Polygon*) shape;
                             item = new QGraphicsPolygonItem(polygon->get_points(scene->lab->labSize().y()), 0);
                         }
-
+                        //Paint regualar shapes & text
                         if (dynamic_cast<QAbstractGraphicsShapeItem*>(item)) {
                             auto *graphics_shape = (QAbstractGraphicsShapeItem*) item;
                             graphics_shape->setBrush( QBrush( shape->get_color()));
                         }
+                        //Paint if shape is a line
                         else if (dynamic_cast<QGraphicsLineItem*>(item)){
                             auto *line_item = (QGraphicsLineItem*) item;
                             line_item->setPen(QPen(shape->get_color()));
                         }
+                        //Ensures shape visibility
                         item->setVisible(data_view->isItemChecked(shape->getId()));
                         item->setZValue(8);
                         item->setOpacity(1);
@@ -241,9 +244,11 @@ void CRQRobotComm::dataControler() //Called when the socket receive something
                         {
                             std::lock_guard<std::mutex> lock(m);
                             bool notify = ttd.empty() || ttd.begin()->first > getCurrentTime() + shape->getTTL() * 1000;
+                            //Verify if already exists a shape with this identifier
                             if (ShapesDrawn.count(shape->getId()) == 1) {
                                 scene->removeItem(ShapesDrawn[shape->getId()]);
                             }
+                            //Add to the shapes draw
                             ShapesDrawn[shape->getId()] = item;
                             ttd[getCurrentTime() + shape->getTTL() * 1000] = {item, shape->getId()};
                             data_view->addItem(shape->getId());
@@ -253,8 +258,6 @@ void CRQRobotComm::dataControler() //Called when the socket receive something
                             scene->addItem(item);
                         }
                     }
-                    break;
-                case CRQDrawHandler::INTERNAL_KNOWLEDGE:
                     break;
             } // End of switch (selecciona o objecto recebido)
 
