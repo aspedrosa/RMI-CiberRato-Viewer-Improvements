@@ -164,7 +164,7 @@ public class CRDraw {
      * @throws SocketException
      * @throws UnknownHostException
      */
-    CRDraw(String host, int port) throws SocketException, UnknownHostException {
+    public CRDraw(String host, int port) throws SocketException, UnknownHostException {
         viewerPort = port;
         viewerAddress = InetAddress.getByName(host);
         socket = new DatagramSocket();
@@ -176,7 +176,7 @@ public class CRDraw {
      * @throws UnknownHostException
      * @throws SocketException
      */
-    CRDraw(String host) throws UnknownHostException, SocketException {
+    public CRDraw(String host) throws UnknownHostException, SocketException {
         viewerPort = DEFAULT_PORT;
         viewerAddress = InetAddress.getByName(host);
         socket = new DatagramSocket();
@@ -187,7 +187,7 @@ public class CRDraw {
      * @param port -> viewer host port
      * @throws SocketException
      */
-    CRDraw(int port) throws SocketException {
+    public CRDraw(int port) throws SocketException {
         viewerPort = port;
         try {
             viewerAddress = InetAddress.getByName(DEFAULT_HOST);
@@ -199,7 +199,7 @@ public class CRDraw {
      * Draw instantiation
      * @throws SocketException
      */
-    CRDraw() throws SocketException {
+    public CRDraw() throws SocketException {
         viewerPort = DEFAULT_PORT;
         try {
             viewerAddress = InetAddress.getByName(DEFAULT_HOST);
@@ -211,7 +211,7 @@ public class CRDraw {
      * Turn the buffer on or off
      * @param on_off -> Turns the buffer on (true) or off (false)
      */
-    void bufferOnOff(boolean on_off){
+    public void bufferOnOff(boolean on_off){
         buffered = on_off;
     }
 
@@ -221,7 +221,7 @@ public class CRDraw {
      * @param g -> Green quantity.
      * @param b -> Blue  quantity.
      */
-    void setColor(int r, int g, int b){
+    public void setColor(int r, int g, int b){
         color.setColor(r,g,b);
     }
 
@@ -229,7 +229,7 @@ public class CRDraw {
      * Send all the messages in the buffer.
      * @throws IOException
      */
-    void drawAll() throws IOException {
+    public void drawAll() throws IOException {
         if (buffered) {
             System.out.println(buffer.toString());
             sendMessage(buffer.toString());
@@ -246,7 +246,7 @@ public class CRDraw {
      * @param y -> y position of the center point of the ellipse.
      * @throws IOException
      */
-    void drawEllipse(String id, double diam_vertical, double diam_horizontal, double x, double y) throws IOException {
+    public void drawEllipse(String id, double diam_vertical, double diam_horizontal, double x, double y) throws IOException {
         drawEllipse(id,diam_vertical, diam_horizontal, x, y, color, DEFAULT_TTL);
     }
 
@@ -260,7 +260,7 @@ public class CRDraw {
      * @param color -> Ellipse color.
      * @throws IOException
      */
-    void drawEllipse(String id, double diam_vertical, double diam_horizontal, double x, double y, Color color) throws IOException {
+    public void drawEllipse(String id, double diam_vertical, double diam_horizontal, double x, double y, Color color) throws IOException {
         drawEllipse(id,diam_vertical, diam_horizontal, x, y, color, DEFAULT_TTL);
     }
 
@@ -274,7 +274,7 @@ public class CRDraw {
      * @param time_to_live -> Ellipse time to live (erases after ttl milliseconds).
      * @throws IOException
      */
-    void drawEllipse(String id, double diam_vertical, double diam_horizontal, double x, double y, int time_to_live) throws IOException {
+    public void drawEllipse(String id, double diam_vertical, double diam_horizontal, double x, double y, int time_to_live) throws IOException {
         drawEllipse(id,diam_vertical, diam_horizontal, x, y, color, time_to_live);
     }
 
@@ -289,7 +289,7 @@ public class CRDraw {
      * @param time_to_live -> Ellipse time to live (erases after ttl milliseconds).
      * @throws IOException
      */
-    void drawEllipse(String id, double diam_vertical, double diam_horizontal, double x, double y, Color color, int time_to_live) throws IOException {
+    public void drawEllipse(String id, double diam_vertical, double diam_horizontal, double x, double y, Color color, int time_to_live) throws IOException {
         String msg = "<Ellipse ttl=\""+time_to_live+"\" id=\""+id+"\" "+color.toString()+" Diam_vertical=\""+diam_vertical+"\" Diam_horizontal=\""+diam_horizontal+"\" x=\""+x+"\" y=\""+y+"\"></Ellipse>";
         if(buffered){
             buffer.append(msg);
@@ -307,7 +307,7 @@ public class CRDraw {
      * @param y -> y position of the center point of the circle.
      * @throws IOException
      */
-    void drawCircle(String id, double diam, double x, double y) throws IOException {
+    public void drawCircle(String id, double diam, double x, double y) throws IOException {
         drawCircle(id,diam,x,y,color,DEFAULT_TTL);
     }
 
@@ -320,7 +320,7 @@ public class CRDraw {
      * @param -> color Circle color.
      * @throws IOException
      */
-    void drawCircle(String id, double diam, double x, double y, Color color) throws IOException {
+    public void drawCircle(String id, double diam, double x, double y, Color color) throws IOException {
         drawCircle(id,diam,x,y,color,DEFAULT_TTL);
     }
 
@@ -333,7 +333,7 @@ public class CRDraw {
      * @param -> time_to_live Circle time to live (erases after ttl milliseconds).
      * @throws IOException
      */
-    void drawCircle(String id, double diam, double x, double y, int time_to_live) throws IOException {
+    public void drawCircle(String id, double diam, double x, double y, int time_to_live) throws IOException {
         drawCircle(id,diam,x,y,color,time_to_live);
     }
 
@@ -347,7 +347,7 @@ public class CRDraw {
      * @paramv time_to_live Circle time to live (erases after ttl milliseconds).
      * @throws IOException
      */
-    void drawCircle(String id, double diam, double x, double y, Color color, int time_to_live) throws IOException {
+    public void drawCircle(String id, double diam, double x, double y, Color color, int time_to_live) throws IOException {
         drawEllipse(id,diam,diam,x,y,color,time_to_live);
     }
 
@@ -359,7 +359,7 @@ public class CRDraw {
      * @param y -> y position of the center point of the text.
      * @throws IOException
      */
-    void drawText(String id, String text, double x, double y) throws IOException {
+    public void drawText(String id, String text, double x, double y) throws IOException {
         drawText(id, DEFAULT_FONT_SIZE,text, x, y, color, DEFAULT_TTL);
     }
 
@@ -372,7 +372,7 @@ public class CRDraw {
      * @param color -> Text color.
      * @throws IOException
      */
-    void drawText(String id, String text, double x, double y, Color color) throws IOException {
+    public void drawText(String id, String text, double x, double y, Color color) throws IOException {
         drawText(id, DEFAULT_FONT_SIZE,text, x, y, color, DEFAULT_TTL);
     }
 
@@ -385,7 +385,7 @@ public class CRDraw {
      * @param time_to_live -> Text time to live (erases after ttl milliseconds).
      * @throws IOException
      */
-    void drawText(String id, String text, double x, double y, int time_to_live) throws IOException {
+    public void drawText(String id, String text, double x, double y, int time_to_live) throws IOException {
         drawText(id, DEFAULT_FONT_SIZE,text, x, y, color, time_to_live);
     }
 
@@ -398,7 +398,7 @@ public class CRDraw {
      * @param y -> y position of the center point of the text.
      * @throws IOException
      */
-    void drawText(String id, int font_size, String text, double x, double y) throws IOException {
+    public void drawText(String id, int font_size, String text, double x, double y) throws IOException {
         drawText(id, font_size, text, x, y, color, DEFAULT_TTL);
     }
 
@@ -412,7 +412,7 @@ public class CRDraw {
      * @param color -> Text color.
      * @throws IOException
      */
-    void drawText(String id, int font_size, String text, double x, double y, Color color) throws IOException {
+    public void drawText(String id, int font_size, String text, double x, double y, Color color) throws IOException {
         drawText(id, font_size,text, x, y, color, DEFAULT_TTL);
     }
 
@@ -426,7 +426,7 @@ public class CRDraw {
      * @param time_to_live -> Text time to live (erases after ttl milliseconds).
      * @throws IOException
      */
-    void drawText(String id, int font_size, String text, double x, double y, int time_to_live) throws IOException {
+    public void drawText(String id, int font_size, String text, double x, double y, int time_to_live) throws IOException {
         drawText(id, font_size, text, x, y, color, time_to_live);
     }
 
@@ -441,7 +441,7 @@ public class CRDraw {
      * @param time_to_live -> Text time to live (erases after ttl milliseconds).
      * @throws IOException
      */
-    void drawText(String id, int font_size, String text, double x, double y, Color color, int time_to_live) throws IOException {
+    public void drawText(String id, int font_size, String text, double x, double y, Color color, int time_to_live) throws IOException {
         String msg = "<Text ttl=\""+time_to_live+"\" id=\""+id+"\" "+color.toString()+" text=\""+text+"\" x=\""+x+"\" y=\""+y+"\" font_size=\""+font_size+"\"></Text>";
         if(buffered){
             buffer.append(msg);
@@ -460,7 +460,7 @@ public class CRDraw {
      * @param y -> y position of the center point of the rectangle.
      * @throws IOException
      */
-    void drawRectangle(String id, double width, double height, double x, double y) throws IOException {
+    public void drawRectangle(String id, double width, double height, double x, double y) throws IOException {
         drawRectangle(id,width,height,x,y,color,DEFAULT_TTL);
     }
 
@@ -474,7 +474,7 @@ public class CRDraw {
      * @param color -> Rectangle color.
      * @throws IOException
      */
-    void drawRectangle(String id, double width, double height, double x, double y, Color color) throws IOException {
+    public void drawRectangle(String id, double width, double height, double x, double y, Color color) throws IOException {
         drawRectangle(id,width,height,x,y,color,DEFAULT_TTL);
     }
 
@@ -488,7 +488,7 @@ public class CRDraw {
      * @param time_to_live -> Rectangle time to live (erases after ttl milliseconds).
      * @throws IOException
      */
-    void drawRectangle(String id, double width, double height, double x, double y, int time_to_live) throws IOException {
+    public void drawRectangle(String id, double width, double height, double x, double y, int time_to_live) throws IOException {
         drawRectangle(id,width,height,x,y,color,time_to_live);
     }
 
@@ -503,7 +503,7 @@ public class CRDraw {
      * @param time_to_live -> Rectangle time to live (erases after ttl milliseconds).
      * @throws IOException
      */
-    void drawRectangle(String id, double width, double height, double x, double y, Color color, int time_to_live) throws IOException {
+    public void drawRectangle(String id, double width, double height, double x, double y, Color color, int time_to_live) throws IOException {
         String msg = "<Rectangle ttl=\""+time_to_live+"\" id=\""+id+"\" "+color.toString()+" Width=\""+width+"\" Height=\""+height+"\" x=\""+x+"\" y=\""+y+"\"></Rectangle>";
         if(buffered){
             buffer.append(msg);
@@ -521,7 +521,7 @@ public class CRDraw {
      * @param y -> y position of the center point of the square.
      * @throws IOException
      */
-    void drawSquare(String id, double width, double x, double y) throws IOException {
+    public void drawSquare(String id, double width, double x, double y) throws IOException {
         drawSquare(id,width,x,y,color,DEFAULT_TTL);
     }
 
@@ -534,7 +534,7 @@ public class CRDraw {
      * @param color -> Square color.
      * @throws IOException
      */
-    void drawSquare(String id, double width, double x, double y, Color color) throws IOException {
+    public void drawSquare(String id, double width, double x, double y, Color color) throws IOException {
         drawSquare(id,width,x,y,color,DEFAULT_TTL);
     }
 
@@ -547,7 +547,7 @@ public class CRDraw {
      * @param time_to_live -> Square time to live (erases after ttl milliseconds).
      * @throws IOException
      */
-    void drawSquare(String id, double width, double x, double y, int time_to_live) throws IOException {
+    public void drawSquare(String id, double width, double x, double y, int time_to_live) throws IOException {
         drawSquare(id,width,x,y,color,time_to_live);
     }
 
@@ -561,7 +561,7 @@ public class CRDraw {
      * @param time_to_live -> Square time to live (erases after ttl milliseconds).
      * @throws IOException
      */
-    void drawSquare(String id, double width, double x, double y, Color color, int time_to_live) throws IOException {
+    public void drawSquare(String id, double width, double x, double y, Color color, int time_to_live) throws IOException {
         drawRectangle(id,width,width,x,y,color,time_to_live);
     }
 
@@ -571,7 +571,7 @@ public class CRDraw {
      * @param point_list -> List of polygon points (the order matters).
      * @throws IOException
      */
-    void drawPolygon(String id, Point[] point_list) throws IOException {
+    public void drawPolygon(String id, Point[] point_list) throws IOException {
         drawPolygon(id,point_list,color, DEFAULT_TTL);
     }
 
@@ -582,7 +582,7 @@ public class CRDraw {
      * @param color -> Polygon color.
      * @throws IOException
      */
-    void drawPolygon(String id, Point[] point_list, Color color) throws IOException {
+    public void drawPolygon(String id, Point[] point_list, Color color) throws IOException {
         drawPolygon(id,point_list,color, DEFAULT_TTL);
     }
 
@@ -593,7 +593,7 @@ public class CRDraw {
      * @param time_to_live -> Polygon time to live (erases after ttl milliseconds).
      * @throws IOException
      */
-    void drawPolygon(String id, Point[] point_list, int time_to_live) throws IOException {
+    public void drawPolygon(String id, Point[] point_list, int time_to_live) throws IOException {
         drawPolygon(id,point_list,color,time_to_live);
     }
 
@@ -605,7 +605,7 @@ public class CRDraw {
      * @param time_to_live -> Polygon time to live (erases after ttl milliseconds).
      * @throws IOException
      */
-    void drawPolygon(String id, Point[] point_list, Color color, int time_to_live) throws IOException {
+    public void drawPolygon(String id, Point[] point_list, Color color, int time_to_live) throws IOException {
         StringBuilder msg_builder = new StringBuilder("<Polygon id=\""+id+"\" ttl=\""+time_to_live+"\" "+color+">");
         for (Point point : point_list) {
             msg_builder.append(point.toString());
@@ -629,7 +629,7 @@ public class CRDraw {
      * @param y1 -> y position of the second line point.
      * @throws IOException
      */
-    void drawLine(String id, double x0, double y0, double x1, double y1) throws IOException {
+    public void drawLine(String id, double x0, double y0, double x1, double y1) throws IOException {
         drawLine(id, x0, y0, x1, y1, color, DEFAULT_TTL);
     }
 
@@ -643,7 +643,7 @@ public class CRDraw {
      * @param color -> Line color.
      * @throws IOException
      */
-    void drawLine(String id, double x0, double y0, double x1, double y1, Color color) throws IOException {
+    public void drawLine(String id, double x0, double y0, double x1, double y1, Color color) throws IOException {
         drawLine(id, x0, y0, x1, y1, color, DEFAULT_TTL);
     }
 
@@ -657,7 +657,7 @@ public class CRDraw {
      * @param time_to_live -> Line time to live (erases after ttl milliseconds).
      * @throws IOException
      */
-    void drawLine(String id, double x0, double y0, double x1, double y1, int time_to_live) throws IOException {
+    public void drawLine(String id, double x0, double y0, double x1, double y1, int time_to_live) throws IOException {
         drawLine(id, x0, y0, x1, y1, color, time_to_live);
     }
 
@@ -672,7 +672,7 @@ public class CRDraw {
      * @param time_to_live -> Line time to live (erases after ttl milliseconds).
      * @throws IOException
      */
-    void drawLine(String id, double x0, double y0, double x1, double y1, Color color, int time_to_live) throws IOException {
+    public void drawLine(String id, double x0, double y0, double x1, double y1, Color color, int time_to_live) throws IOException {
         String msg = "<Line ttl=\""+time_to_live+"\" id=\""+id+"\" "+color+" x0=\""+x0+"\" y0=\""+y0+"\" x1=\""+x1+"\" y1=\""+y1+"\"></Line>";
         if(buffered){
             buffer.append(msg);
@@ -689,7 +689,7 @@ public class CRDraw {
      * @param p1 -> Second point.
      * @throws IOException
      */
-    void drawLine2(String id, Point p0, Point p1) throws IOException {
+    public void drawLine2(String id, Point p0, Point p1) throws IOException {
         drawLine2(id, p0, p1, color, DEFAULT_TTL);
     }
 
@@ -701,7 +701,7 @@ public class CRDraw {
      * @param color -> Line color.
      * @throws IOException
      */
-    void drawLine2(String id, Point p0, Point p1, Color color) throws IOException {
+    public void drawLine2(String id, Point p0, Point p1, Color color) throws IOException {
         drawLine2(id, p0, p1, color, DEFAULT_TTL);
     }
 
@@ -713,7 +713,7 @@ public class CRDraw {
      * @param time_to_live -> Line time to live (erases after ttl milliseconds).
      * @throws IOException
      */
-    void drawLine2(String id, Point p0, Point p1, int time_to_live) throws IOException {
+    public void drawLine2(String id, Point p0, Point p1, int time_to_live) throws IOException {
         drawLine2(id, p0, p1, color, time_to_live);
     }
 
@@ -726,7 +726,7 @@ public class CRDraw {
      * @param time_to_live -> Line time to live (erases after ttl milliseconds).
      * @throws IOException
      */
-    void drawLine2(String id, Point p0, Point p1, Color color, int time_to_live) throws IOException {
+    public void drawLine2(String id, Point p0, Point p1, Color color, int time_to_live) throws IOException {
         String msg = "<Line ttl=\""+time_to_live+"\" id=\""+id+"\" "+color+" "+p0.toStringIndex(0)+" "+p1.toStringIndex(1)+"></Line>";
         if(buffered){
             buffer.append(msg);
