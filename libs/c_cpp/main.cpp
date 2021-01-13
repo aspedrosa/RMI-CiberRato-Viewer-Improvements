@@ -6,12 +6,12 @@ int main(int _, char **__) {
     setColor(255, 0, 0);
     //bufferOnOff(false);
 
-    drawEllipse("5.loc.4", 50, 25, 7, 7, nullptr, -1);
-    drawCircle("5.loc.3", 50, 7, 8, nullptr, -1);
+    drawEllipse("5.loc.4", 2, 1, 7, 7, nullptr, -1);
+    drawCircle("5.loc.3", 2, 7, 8, nullptr, -1);
     drawText("5.loc.2", "ola", 1, 2, 20, nullptr, -1);
     Color c = {0, 255, 0};
-    drawRectangle("5.loc.1", 50, 10, 10, 10, &c, -1);
-    drawSquare("5.loc.5", 50, 10, 13, nullptr, -1);
+    drawRectangle("5.loc.1", 2, 1, 10, 10, &c, -1);
+    drawSquare("5.loc.5", 3, 10, 13, nullptr, -1);
     Point points[3];
     points[0] = {0, 0};
     points[1] = {0, 7};
