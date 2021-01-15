@@ -17,6 +17,9 @@ representando de forma gráfica o estado de cada um dos intervenientes
 e os robots, bem como as pontuações e estado dos mesmos.  No canto superior
 esquerdo encontram-se os botões de controlo da prova, que podem não aparecer
 se o Viewer for chamado com a opção -nocontrol.
+	Esta versão do visualizador contem também uma componente que
+permite receber mensagem de desenho por parte dos agentes para desenhar items
+(circulos, quadrados, texto, ...) sobre a cena de simulação.
 
 ### Modo de utilização
 
@@ -24,13 +27,15 @@ se o Viewer for chamado com a opção -nocontrol.
 localmente ou num computador remoto, acessivel por UDP/IP.
 
 	Linha de comandos: 
-		Viewer	[-host remoteSimulatorAddress:port]
-				[-lowercolor X11color]
-				[-highercolor X11color]
-				[-nocontrol]
-				[-autoconnect]
-				[-autostart]
-				[-help]				 
+		Viewer	[--host remoteSimulatorAddress:port]
+				[--drawerport port]
+				[--nodraw]
+				[--lowercolor X11color]
+				[--highercolor X11color]
+				[--nocontrol]
+				[--autoconnect]
+				[--autostart]
+				[--help]
 
 	Existem dois ficheiros de configuração na distribuição. O ficheiro 
 param_auto.xml permite configurar o visualizador de modo a este
@@ -72,6 +77,16 @@ http://www.trolltech.com
         Joao Figueiredo
         Universidade de Aveiro
         email: joao.figueiredo@hotpop.com
+
+        # Desenhos de items:
+
+        André Pedrosa
+        Universidade de Aveiro
+        email: aspedrosa@ua.pt
+
+        Rafael Maio
+        Universidade de Aveiro
+        email: rafael.maio@live.ua.pt
 
 Copyright (c) 2006 -  Ciber-Rato Team
 

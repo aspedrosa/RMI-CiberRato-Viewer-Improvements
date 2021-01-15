@@ -60,11 +60,15 @@ int main( int argc, char **argv )
 			 param->serverAddr = svrName;
              i+=2;
         }
-        else if(strcmp(Visualizador.argv()[i], "--agent_port") == 0 ){
+        else if(strcmp(Visualizador.argv()[i], "--drawerport") == 0 ){
             if(Visualizador.argc()<i+1 || Visualizador.argv()[i+1][0]=='-')
                 ParameterError( Visualizador.argv()[i+1] );
-            sscanf( (Visualizador.argv()[i+1]), "%hd", &(param->agent_port));
+            sscanf( (Visualizador.argv()[i+1]), "%hd", &(param->drawerPort));
             i+=1;
+        }
+        else if( strcmp(Visualizador.argv()[i], "--nodraw") == 0 ){
+            i+=1;
+            param->agentDrawer = 'n';
         }
         else if( strcmp(Visualizador.argv()[i], "--lowercolor") == 0 )
         {
@@ -95,10 +99,6 @@ int main( int argc, char **argv )
 			i+=1;
             param->autoConnect = 'y';
         }
-        else if( strcmp(Visualizador.argv()[i], "--nodraw") == 0 ){
-            i+=1;
-            param->agent_drawer = 'n';
-        }
         else if( strcmp(Visualizador.argv()[i], "--paramfile") == 0 )
         {
 			if(Visualizador.argc()<i+2 || Visualizador.argv()[i+1][0]=='-')
@@ -109,12 +109,12 @@ int main( int argc, char **argv )
         else if( strcmp(Visualizador.argv()[i], "--help") == 0)
         {
 			cout << "viewer-1.1.0       " << "[--host simulatorAddress:port]\n";
-            cout << "                   [--agent_port port]\n";
+            cout << "                   [--drawerport port]\n";
+            cout << "                   [--nodraw]\n";
 			cout << "                   [--lowercolor color]\n";
 			cout << "                   [--highercolor color]\n";
 			cout << "                   [--paramfile file.xml]\n";
 			cout << "                   [--nocontrol]\n";
-            cout << "                   [--nodraw]\n";
 			cout << "                   [--autoconnect]\n";
 			cout << "                   [--autostart]\n";
 			cout << "                   [--help]\n";

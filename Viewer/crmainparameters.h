@@ -72,10 +72,10 @@ public:
 	char control;
 
 	/* Server port to receive messages from agents */
-    unsigned short agent_port;
+    unsigned short drawerPort;
 
     /* Listen to agent drawing messages */
-    char agent_drawer;
+    char agentDrawer;
 
 };
 #endif

@@ -4,8 +4,6 @@
  */
 
 import java.io.IOException;
-import java.net.*;
-
 /**
  * This file implements the library to draw graphic shapes
  * and text.
@@ -13,85 +11,8 @@ import java.net.*;
  * Communicates with the viewer.
  */
 
-class Color{
-    /**
-     * Red quantity.
-     * */
-    int r;
+import java.net.*;
 
-    /**
-     * Green quantity.
-     * */
-    int g;
-
-    /**
-     * Blue quantity.
-     * */
-    int b;
-
-
-    /**
-     * Set default color.
-     * @param r -> red quantity.
-     * @param g -> green quantity.
-     * @param b -> blue quantity.
-     */
-    public void setColor(int r, int g, int b) {
-        this.r = r;
-        this.g = g;
-        this.b = b;
-    }
-
-    /**
-     * Converts the color to a string in message format.
-     * @return Color in message format.
-     */
-    @Override
-    public String toString(){
-        return "red=\"" + r + "\" green=\""+ g +"\"" + " blue=\""+ b + "\"";
-    }
-}
-
-class Point {
-
-    /**
-     * point x position
-     */
-    private final double x;
-
-    /**
-     * point y position
-     */
-    private final double y;
-
-    /**
-     * Point instantiation
-     * @param x -> point x position
-     * @param y -> point y position
-     */
-    public Point(double x, double y) {
-        this.x = x;
-        this.y = y;
-    }
-
-    /**
-     * Converts the point to a string in polygon message format.
-     * @return Point in polygon message format.
-     */
-    @Override
-    public String toString() {
-        return "<Point x=\""+x+"\" y=\""+y+"\"></Point>";
-    }
-
-    /**
-     * Converts the point to a string in line message format.
-     * @param index -> point index.
-     * @return Converts the point to a string in line message format.
-     */
-    public String toStringIndex(int index) {
-        return "x"+index+"=\""+x+"\" y"+index+"=\""+y+"\"";
-    }
-}
 
 public class CRDraw {
 

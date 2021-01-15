@@ -30,8 +30,8 @@ CRMainParameters::CRMainParameters()
 	autoConnect = 'n';
 	control = 'y';
 	autoStart = 'n';
-    agent_port = 5000;
-	agent_drawer = 'y';
+    drawerPort = 5000;
+	agentDrawer = 'y';
 }
 
 CRMainParameters::~CRMainParameters()
